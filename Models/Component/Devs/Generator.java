@@ -10,6 +10,7 @@ public class Generator extends ViewableAtomic {
   
   private static int counter = 0;
   
+  
   private int advance = 0;
   
   private double tension = 0;
@@ -52,9 +53,9 @@ public class Generator extends ViewableAtomic {
   }
   
   private double f ( double e ) {
-    double w0 = 2 * Math. PI * 50 ;
-    double r = Math. sin ( w0 * e ) ;
-    return r;
+//    double w0 = 2 * Math. PI * 50 ;
+//    double r = Math. sin ( w0 * e ) ;
+    return tension - alfa;
   }
  
   
@@ -82,7 +83,7 @@ public class Generator extends ViewableAtomic {
   
   @Override
   public double ta () {
-    return sigma;
+    return advance;
   }
   
 
