@@ -1,15 +1,17 @@
 package Component.Devs;
 
 import Component.Devs.lib.Reading;
+import RandomNumbers.WeibullDistribution;
 import java.util.ArrayList;
 
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 
-public class Generator extends ViewableAtomic {
+public class GeneratorOk extends ViewableAtomic {
   
   private static int counter = 0;
   
+  private final WeibullDistribution distribution = new WeibullDistribution ( 1d, 1d, 1 );
   
   private int advance = 0;
   
@@ -21,8 +23,8 @@ public class Generator extends ViewableAtomic {
 
   private double activeTension;
   
-  public Generator ( String n, int e, double t ) {
-    super ( n );
+  public GeneratorOk ( String n, int e, double t ) {
+    super ( String. format ( "Generator OK %s", n ) );
     addOutport ( "out" );
     advance = e;
     tension = t;
@@ -55,7 +57,7 @@ public class Generator extends ViewableAtomic {
   private double f ( double e ) {
 //    double w0 = 2 * Math. PI * 50 ;
 //    double r = Math. sin ( w0 * e ) ;
-    return tension - alfa;
+    return tension ;
   }
  
   
@@ -69,13 +71,13 @@ public class Generator extends ViewableAtomic {
     super. deltint ();
     sigma = advance;
     phase = "ok";
+    step ++;
   }
   
   @Override
   public message out() {
     message m = new message ();
     activeTension = f ( step );
-    step ++;
     double v = activeTension * tension;
     m. add ( makeContent ( "out", new Reading ( v ) ) );
     return m;

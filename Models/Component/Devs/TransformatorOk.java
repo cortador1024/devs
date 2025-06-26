@@ -4,7 +4,7 @@ import Component.Devs.lib.Reading;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 
-public class Transformator extends ViewableAtomic {
+public class TransformatorOk extends ViewableAtomic {
   
   private static int counter = 0;
   
@@ -16,8 +16,8 @@ public class Transformator extends ViewableAtomic {
   
   private double relation;
   
-  public Transformator ( String n, int e, double t0, double t1 ) {
-    super ( n );
+  public TransformatorOk ( String n, int e, double t0, double t1 ) {
+    super ( String. format ( "Trasnformator OKs %s", n ) );
     addOutport ( "out" );
     addInport ( "in" );
     holdIn ( "wait", INFINITY );
@@ -49,7 +49,7 @@ public class Transformator extends ViewableAtomic {
   @Override
   public void deltint() {
     super. deltint ();
-    holdIn("wait", INFINITY);
+    holdIn ( "wait", INFINITY );
   }
   
   @Override

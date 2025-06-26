@@ -36,7 +36,7 @@ public class LineController extends ViewableAtomic 	{
   private ArrayList < Integer > yl1 = new ArrayList <> ();
   
 	public LineController ( String name) {
-		super ( name );
+		super ( String. format ( "LineController %s", name ) );
 		addInport ( "stateIn0" );
 		addInport ( "stateIn1" );
 		addInport ( "stateIn2" );

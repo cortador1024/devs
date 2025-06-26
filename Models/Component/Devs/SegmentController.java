@@ -59,7 +59,7 @@ public class SegmentController extends ViewableAtomic 	{
   
   
   public SegmentController(String name ) {
-		super ( name );
+		super ( String. format ( "SegmentController %s", name ) );
 		addInport ( "stateIn" );
 		addInport ( "request" );
 		addOutport ( "stateOut" );

@@ -1,5 +1,6 @@
 package Component.Devs;
 
+import RandomNumbers.*;
 import Component.Devs.lib.SensorStatus;
 import Component.Devs.lib.Reading;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import model.modeling.message;
 import view.modeling.ViewableAtomic;
 
 public class SensorController extends ViewableAtomic	{
+
+  private double variable;
 	
   public enum SensorPhase {
     
@@ -98,7 +101,8 @@ public class SensorController extends ViewableAtomic	{
 	    } break;
 	    case 2: {
 	      holdIn ( String. valueOf ( SensorPhase.STREAM ),
-	        0
+          // tiempo de proceso del sensor para enviar la lectura $variable
+	        variable
 	      );
 	      zl0. remove ( 0 );
 	    } break;

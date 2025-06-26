@@ -9,23 +9,23 @@ import view.modeling.ViewableDigraph;
 
 public class GeneratorController extends ViewableDigraph	{
   
-  private Generator g0;
-  private Transformator t0;
-  private Transformator t1;
-  private Transformator t2;
+  private GeneratorCoupled g0;
+  private TransformatorCoupled t0;
+  private TransformatorCoupled t1;
+  private TransformatorCoupled t2;
   
   public GeneratorController () {	
-		super ( "GeneratorController" );
+		super ( String. format ( "GeneratorController" ) );
 		
     addOutport ( "tension0" );
     addOutport ( "tension1" );
     addOutport ( "tension2" );
     
-    add ( g0 = new Generator ( "g0", 3, 33 ) );
+    add ( g0 = new GeneratorCoupled ( "g0", 3, 33 ) );
 
-    add ( t0 = new Transformator ( "t0", 3, 33, 33 ) );
-    add ( t1 = new Transformator ( "t1", 3, 33, 13 ) );
-    add ( t2 = new Transformator ( "t2", 3, 33, 13 ) );
+    add ( t0 = new TransformatorCoupled ( "t0", 3, 33, 33 ) );
+    add ( t1 = new TransformatorCoupled ( "t1", 3, 33, 13 ) );
+    add ( t2 = new TransformatorCoupled ( "t2", 3, 33, 13 ) );
     
     addCoupling ( g0, "out", t0, "in" );
     addCoupling ( g0, "out", t1, "in" );
@@ -44,10 +44,10 @@ public class GeneratorController extends ViewableDigraph	{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(420, 350);
-        ((ViewableComponent)withName("g0")).setPreferredLocation(new Point(15, 150));
-        ((ViewableComponent)withName("t0")).setPreferredLocation(new Point(151, 33));
-        ((ViewableComponent)withName("t1")).setPreferredLocation(new Point(149, 150));
-        ((ViewableComponent)withName("t2")).setPreferredLocation(new Point(149, 265));
+        preferredSize = new Dimension(678, 463);
+        ((ViewableComponent)withName("Transformator Coupled t2")).setPreferredLocation(new Point(317, 311));
+        ((ViewableComponent)withName("Generator Coupled g0")).setPreferredLocation(new Point(44, 161));
+        ((ViewableComponent)withName("Transformator Coupled t1")).setPreferredLocation(new Point(316, 167));
+        ((ViewableComponent)withName("Transformator Coupled t0")).setPreferredLocation(new Point(316, 23));
     }
 }

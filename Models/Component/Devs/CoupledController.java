@@ -34,8 +34,8 @@ public class CoupledController extends ViewableDigraph	{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(1554, 430);
-        ((ViewableComponent)withName("GeneratorController")).setPreferredLocation(new Point(50, 50));
-        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(507, 41));
+        preferredSize = new Dimension(1771, 539);
+        ((ViewableComponent)withName("GeneratorController")).setPreferredLocation(new Point(9, 18));
+        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(737, 18));
     }
 }
