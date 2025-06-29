@@ -9,7 +9,7 @@ import view.modeling.ViewableDigraph;
 
 public class CoupledController extends ViewableDigraph	{
 
-  private final GeneratorController sc;
+  private final SimulatorController sc;
   
   private final ControlController cc;
 
@@ -18,7 +18,7 @@ public class CoupledController extends ViewableDigraph	{
 		
     addOutport ( "out" );
     
-    add (sc = new GeneratorController () );
+    add ( sc = new SimulatorController () );
     add ( cc = new ControlController () );
     
     addCoupling ( sc, "tension0", cc, "tensionIn0" );
@@ -35,8 +35,8 @@ public class CoupledController extends ViewableDigraph	{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(1819, 539);
-        ((ViewableComponent)withName("SimulatorController")).setPreferredLocation(new Point(16, 18));
-        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(910, 18));
+        preferredSize = new Dimension(1819, 567);
+        ((ViewableComponent)withName("SimulatorController")).setPreferredLocation(new Point(24, 27));
+        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(880, 27));
     }
 }

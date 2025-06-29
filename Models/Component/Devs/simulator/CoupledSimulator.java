@@ -46,9 +46,9 @@ public class CoupledSimulator extends ViewableDigraph {
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(389, 145);
-        ((ViewableComponent)withName("Et2")).setPreferredLocation(new Point(125, 60));
-        ((ViewableComponent)withName("Cs2/fg0")).setPreferredLocation(new Point(-4, 15));
-        ((ViewableComponent)withName("Cs2/rg0")).setPreferredLocation(new Point(-6, 87));
+        preferredSize = new Dimension(329, 162);
+        ((ViewableComponent)withName("Et2")).setPreferredLocation(new Point(100, 55));
+        ((ViewableComponent)withName("Cs2/fg0")).setPreferredLocation(new Point(-16, 18));
+        ((ViewableComponent)withName("Cs2/rg0")).setPreferredLocation(new Point(-12, 94));
     }
 }
