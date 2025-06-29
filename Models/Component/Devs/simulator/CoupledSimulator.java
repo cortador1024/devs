@@ -4,8 +4,8 @@
  */
 package Component.Devs.simulator;
 
-import Component.Devs.fail.FailGenerator;
-import Component.Devs.fail.ResumeGenerator;
+import Component.Devs.simulator.fail.FailGenerator;
+import Component.Devs.simulator.fail.ResumeGenerator;
 import Component.Devs.lib.DevRegistry;
 import java.awt.Dimension;
 import java.awt.Point;

@@ -1,1 +1,1 @@
-{"selectedPackage":"Component.Devs","selectedModel":"CoupledController","binDirectory":"build/classes","sourceDirectory":"Models","packageNames":["Component.Devs"],"databaseConfigurations":{"PostgreSQL":["postgres","localhost","5432","postgres",""]}}
+{"selectedPackage":"Component.Devs.control","selectedModel":"ControlController","binDirectory":"build/classes","sourceDirectory":"Models","packageNames":["Component.Devs.control"],"databaseConfigurations":{"PostgreSQL":["postgres","localhost","5432","postgres",""]}}
