@@ -1,4 +1,4 @@
-package Component.Devs;
+package Component.Devs.simulator;
 
 import Component.Devs.lib.DevRegistry;
 import Component.Devs.lib.Reading;

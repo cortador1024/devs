@@ -1,7 +1,7 @@
 package Component.Devs.control;
 
 
-import Component.Devs.SimulatorController;
+import Component.Devs.simulator.SimulatorController;
 import java.awt.Dimension;
 import java.awt.Point;
 import view.modeling.ViewableComponent;
