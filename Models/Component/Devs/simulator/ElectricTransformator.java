@@ -20,6 +20,7 @@ public class ElectricTransformator extends ViewableAtomic {
     super ( n );
     addOutport ( "out" );
     addInport ( "in" );
+    addInport ( "state" );
     holdIn ( "wait", INFINITY );
     nominalTension = t1;
     relation = ( ( Number ) t1 ). doubleValue () / ( ( Number ) t0 ). doubleValue ();

@@ -1,6 +1,7 @@
-package Component.Devs.control;
+package Component.Devs;
 
 
+import Component.Devs.control.ControlController;
 import Component.Devs.simulator.SimulatorController;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -35,8 +36,8 @@ public class CoupledController extends ViewableDigraph	{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(1771, 539);
-        ((ViewableComponent)withName("SimulatorController0")).setPreferredLocation(new Point(11, 23));
-        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(842, 24));
+        preferredSize = new Dimension(1819, 539);
+        ((ViewableComponent)withName("SimulatorController")).setPreferredLocation(new Point(16, 18));
+        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(910, 18));
     }
 }

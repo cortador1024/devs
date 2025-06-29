@@ -28,12 +28,13 @@ public class CoupledSimulator extends ViewableDigraph {
     addInport ( "in" );
     add ( e );
     add ( fail = new FailGenerator ( String. format ( "%s/%s", n, "fg0" ) ) );
-    add ( resume = new ResumeGenerator ( String. format ( "%s/%s", n, "fg0" ) ) );
+    add ( resume = new ResumeGenerator ( String. format ( "%s/%s", n, "rg0" ) ) );
     addCoupling ( e, "out", this, "out" );
     addCoupling ( e, "out", fail, "in" );
     addCoupling ( e, "out", resume, "in" );
-    addCoupling ( fail, "out", e, "in" );
-    addCoupling ( resume, "out", e, "in" );
+    addCoupling ( this, "in", e, "in" );
+    addCoupling ( fail, "out", e, "state" );
+    addCoupling ( resume, "out", e, "state" );
   }
   
   
@@ -45,9 +46,9 @@ public class CoupledSimulator extends ViewableDigraph {
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(248, 202);
-        ((ViewableComponent)withName("FailGenerator2")).setPreferredLocation(new Point(-6, 19));
-        ((ViewableComponent)withName("ElectricTransformator1")).setPreferredLocation(new Point(-6, 77));
-        ((ViewableComponent)withName("ResumeGenerator2")).setPreferredLocation(new Point(-5, 136));
+        preferredSize = new Dimension(389, 145);
+        ((ViewableComponent)withName("Et2")).setPreferredLocation(new Point(125, 60));
+        ((ViewableComponent)withName("Cs2/fg0")).setPreferredLocation(new Point(-4, 15));
+        ((ViewableComponent)withName("Cs2/rg0")).setPreferredLocation(new Point(-6, 87));
     }
 }

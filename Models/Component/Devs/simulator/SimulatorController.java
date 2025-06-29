@@ -15,15 +15,26 @@ import view.modeling.ViewableDigraph;
  */
 public class SimulatorController extends ViewableDigraph{
 
+  private final CoupledSimulator cs0;
+  private final CoupledSimulator cs1;
+  private final CoupledSimulator cs2;
+  private final CoupledSimulator cs3;
+
   public SimulatorController() {
     super ( "SimulatorController" );
     addOutport ( "tension0" );
     addOutport ( "tension1" );
     addOutport ( "tension2" );
-    add ( new CoupledSimulator ( "cs0", new ElectricGenerator ( "eg0", 33 ) ) );
-    add ( new CoupledSimulator ( "cs1", new ElectricTransformator ( "et1", 33, 13 ) ) );
-    add ( new CoupledSimulator ( "cs2", new ElectricTransformator ( "et2", 33, 13 ) ) );
-    add ( new CoupledSimulator ( "cs3", new ElectricTransformator ( "et3", 33, 13 ) ) );
+    add ( cs0 = new CoupledSimulator ( "Cs0", new ElectricGenerator ( "Eg0", 33 ) ) );
+    add ( cs1 = new CoupledSimulator ( "Cs1", new ElectricTransformator ( "Et1", 33, 13 ) ) );
+    add ( cs2 = new CoupledSimulator ( "Cs2", new ElectricTransformator ( "Et2", 33, 13 ) ) );
+    add ( cs3 = new CoupledSimulator ( "Cs3", new ElectricTransformator ( "Et3", 33, 13 ) ) );
+    addCoupling ( cs0, "out", cs1, "in" );
+    addCoupling ( cs0, "out", cs2, "in" );
+    addCoupling ( cs0, "out", cs3, "in" );
+    addCoupling ( cs1, "out", this, "tension0" );
+    addCoupling ( cs2, "out", this, "tension1" );
+    addCoupling ( cs3, "out", this, "tension2" );
   }
   
     /**
@@ -33,10 +44,10 @@ public class SimulatorController extends ViewableDigraph{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(811, 502);
-        ((ViewableComponent)withName("CoupledSimulator1")).setPreferredLocation(new Point(514, 25));
-        ((ViewableComponent)withName("CoupledSimulator0")).setPreferredLocation(new Point(120, 125));
-        ((ViewableComponent)withName("CoupledSimulator3")).setPreferredLocation(new Point(514, 438));
-        ((ViewableComponent)withName("CoupledSimulator2")).setPreferredLocation(new Point(514, 234));
+        preferredSize = new Dimension(845, 502);
+        ((ViewableComponent)withName("Cs1")).setPreferredLocation(new Point(381, 25));
+        ((ViewableComponent)withName("Cs0")).setPreferredLocation(new Point(18, 201));
+        ((ViewableComponent)withName("Cs3")).setPreferredLocation(new Point(380, 350));
+        ((ViewableComponent)withName("Cs2")).setPreferredLocation(new Point(380, 201));
     }
 }

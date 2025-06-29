@@ -27,6 +27,8 @@ public class ElectricGenerator extends ViewableAtomic {
     super ( n );
     addOutport ( "out" );
     addInport ( "in" );
+    addInport ( "state" );
+    holdIn ( "wait", INFINITY );
     tension = t;
     step = 1;
     activeTension = t;

@@ -60,13 +60,13 @@ public class ControlController extends ViewableDigraph	{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(882, 501);
-        ((ViewableComponent)withName("Sensor z2 13.0")).setPreferredLocation(new Point(11, 290));
-        ((ViewableComponent)withName("LineController y0")).setPreferredLocation(new Point(482, 218));
-        ((ViewableComponent)withName("Sensor z1 13.0")).setPreferredLocation(new Point(9, 208));
-        ((ViewableComponent)withName("Sensor z0 33.0")).setPreferredLocation(new Point(10, 133));
-        ((ViewableComponent)withName("SegmentController x2")).setPreferredLocation(new Point(211, 290));
-        ((ViewableComponent)withName("SegmentController x1")).setPreferredLocation(new Point(211, 208));
-        ((ViewableComponent)withName("SegmentController x0")).setPreferredLocation(new Point(209, 132));
+        preferredSize = new Dimension(890, 502);
+        ((ViewableComponent)withName("Sensor z2 13.0")).setPreferredLocation(new Point(-2, 394));
+        ((ViewableComponent)withName("LineController y0")).setPreferredLocation(new Point(454, 223));
+        ((ViewableComponent)withName("Sensor z1 13.0")).setPreferredLocation(new Point(-5, 222));
+        ((ViewableComponent)withName("Sensor z0 33.0")).setPreferredLocation(new Point(-6, 58));
+        ((ViewableComponent)withName("SegmentController x2")).setPreferredLocation(new Point(196, 397));
+        ((ViewableComponent)withName("SegmentController x1")).setPreferredLocation(new Point(196, 222));
+        ((ViewableComponent)withName("SegmentController x0")).setPreferredLocation(new Point(200, 59));
     }
 }
