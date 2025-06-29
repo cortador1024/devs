@@ -6,7 +6,6 @@ package Component.Devs.simulator;
 
 import Component.Devs.simulator.fail.FailGenerator;
 import Component.Devs.simulator.fail.ResumeGenerator;
-import Component.Devs.lib.DevRegistry;
 import java.awt.Dimension;
 import java.awt.Point;
 import view.modeling.ViewableAtomic;
@@ -23,13 +22,13 @@ public class CoupledSimulator extends ViewableDigraph {
   
   private final ResumeGenerator resume;
   
-  public CoupledSimulator ( ViewableAtomic e ) {
-    super ( DevRegistry. register ( CoupledSimulator.class ) );
+  public CoupledSimulator ( String n, ViewableAtomic e ) {
+    super ( n );
     addOutport ( "out" );
     addInport ( "in" );
     add ( e );
-    add ( fail = new FailGenerator ( name ) );
-    add ( resume = new ResumeGenerator ( name ) );
+    add ( fail = new FailGenerator ( String. format ( "%s/%s", n, "fg0" ) ) );
+    add ( resume = new ResumeGenerator ( String. format ( "%s/%s", n, "fg0" ) ) );
     addCoupling ( e, "out", this, "out" );
     addCoupling ( e, "out", fail, "in" );
     addCoupling ( e, "out", resume, "in" );

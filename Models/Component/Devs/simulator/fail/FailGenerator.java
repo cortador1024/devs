@@ -1,6 +1,5 @@
 package Component.Devs.simulator.fail;
 
-import Component.Devs.lib.DevRegistry;
 import Component.Devs.lib.Reading;
 
 import model.modeling.message;
@@ -9,7 +8,7 @@ import view.modeling.ViewableAtomic;
 public class FailGenerator extends ViewableAtomic {
   
   public FailGenerator ( String n ) {
-    super ( DevRegistry. register ( FailGenerator.class ) );
+    super ( n );
     addInport ( "in" );
     addOutport ( "out" );
   }

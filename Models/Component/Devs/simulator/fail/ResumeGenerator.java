@@ -4,7 +4,6 @@
  */
 package Component.Devs.simulator.fail;
 
-import Component.Devs.lib.DevRegistry;
 import Component.Devs.lib.Reading;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
@@ -16,7 +15,7 @@ import view.modeling.ViewableAtomic;
 public class ResumeGenerator extends ViewableAtomic{
 
   public ResumeGenerator ( String n ) {
-    super ( DevRegistry. register ( ResumeGenerator.class ) );
+    super ( n );
     addInport ( "in" );
     addOutport ( "out" );
   }

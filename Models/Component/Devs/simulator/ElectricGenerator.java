@@ -1,6 +1,5 @@
 package Component.Devs.simulator;
 
-import Component.Devs.lib.DevRegistry;
 import Component.Devs.lib.Reading;
 import RandomNumbers.WeibullDistribution;
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ public class ElectricGenerator extends ViewableAtomic {
 
   private double activeTension;
   
-  public ElectricGenerator ( double t ) {
-    super (DevRegistry.register ( ElectricGenerator.class ) );
+  public ElectricGenerator ( String n, double t ) {
+    super ( n );
     addOutport ( "out" );
     addInport ( "in" );
     tension = t;

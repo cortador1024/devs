@@ -4,7 +4,6 @@
  */
 package Component.Devs.simulator;
 
-import Component.Devs.lib.DevRegistry;
 import java.awt.Dimension;
 import java.awt.Point;
 import view.modeling.ViewableComponent;
@@ -17,14 +16,14 @@ import view.modeling.ViewableDigraph;
 public class SimulatorController extends ViewableDigraph{
 
   public SimulatorController() {
-    super (DevRegistry.register ( SimulatorController.class ) );
+    super ( "SimulatorController" );
     addOutport ( "tension0" );
     addOutport ( "tension1" );
     addOutport ( "tension2" );
-    add ( new CoupledSimulator ( new ElectricGenerator ( 33 ) ) );
-    add ( new CoupledSimulator ( new ElectricTransformator ( 33, 13 ) ) );
-    add ( new CoupledSimulator ( new ElectricTransformator ( 33, 13 ) ) );
-    add ( new CoupledSimulator ( new ElectricTransformator ( 33, 13 ) ) );
+    add ( new CoupledSimulator ( "cs0", new ElectricGenerator ( "eg0", 33 ) ) );
+    add ( new CoupledSimulator ( "cs1", new ElectricTransformator ( "et1", 33, 13 ) ) );
+    add ( new CoupledSimulator ( "cs2", new ElectricTransformator ( "et2", 33, 13 ) ) );
+    add ( new CoupledSimulator ( "cs3", new ElectricTransformator ( "et3", 33, 13 ) ) );
   }
   
     /**

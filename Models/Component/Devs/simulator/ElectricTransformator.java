@@ -1,6 +1,5 @@
 package Component.Devs.simulator;
 
-import Component.Devs.lib.DevRegistry;
 import Component.Devs.lib.Reading;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
@@ -17,8 +16,8 @@ public class ElectricTransformator extends ViewableAtomic {
   
   private double relation;
   
-  public ElectricTransformator ( double t0, double t1 ) {
-    super ( DevRegistry. register ( ElectricTransformator.class ) );
+  public ElectricTransformator ( String n, double t0, double t1 ) {
+    super ( n );
     addOutport ( "out" );
     addInport ( "in" );
     holdIn ( "wait", INFINITY );
