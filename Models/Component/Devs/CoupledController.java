@@ -2,7 +2,6 @@ package Component.Devs;
 
 
 import Component.Devs.control.ControlController;
-import Component.Devs.simulator.SimulatorController;
 import java.awt.Dimension;
 import java.awt.Point;
 import view.modeling.ViewableComponent;
@@ -10,7 +9,7 @@ import view.modeling.ViewableDigraph;
 
 public class CoupledController extends ViewableDigraph	{
 
-  private final SimulatorController sc;
+  private final GeneratorController sc;
   
   private final ControlController cc;
 
@@ -19,7 +18,7 @@ public class CoupledController extends ViewableDigraph	{
 		
     addOutport ( "out" );
     
-    add ( sc = new SimulatorController () );
+    add (sc = new GeneratorController () );
     add ( cc = new ControlController () );
     
     addCoupling ( sc, "tension0", cc, "tensionIn0" );
