@@ -1,6 +1,6 @@
 package Component.Devs.lib;
 
-import Component.Devs.SegmentController.SegmentAction;
+import Component.Devs.control.SegmentController.SegmentAction;
 import GenCol.entity;
 
 public class Maneuver extends entity {

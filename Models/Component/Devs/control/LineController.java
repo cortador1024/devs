@@ -1,9 +1,9 @@
-package Component.Devs;
+package Component.Devs.control;
 
 import Component.Devs.lib.SensorStatus;
 import Component.Devs.lib.LineStatus;
-import Component.Devs.SensorController.SensorPhase;
-import Component.Devs.SensorController.SensorState;
+import Component.Devs.control.SensorController.SensorPhase;
+import Component.Devs.control.SensorController.SensorState;
 import java.util.ArrayList;
 
 import model.modeling.message;

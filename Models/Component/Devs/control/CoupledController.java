@@ -1,6 +1,7 @@
-package Component.Devs;
+package Component.Devs.control;
 
 
+import Component.Devs.SimulatorController;
 import java.awt.Dimension;
 import java.awt.Point;
 import view.modeling.ViewableComponent;
@@ -8,21 +9,21 @@ import view.modeling.ViewableDigraph;
 
 public class CoupledController extends ViewableDigraph	{
 
-  private final GeneratorController gc;
+  private final SimulatorController sc;
   
   private final ControlController cc;
 
   public CoupledController() {	
-		super ( "CoupledController" );
+		super ( "CoupledController " );
 		
     addOutport ( "out" );
     
-    add ( gc = new GeneratorController () );
+    add ( sc = new SimulatorController () );
     add ( cc = new ControlController () );
     
-    addCoupling ( gc, "tension0", cc, "tensionIn0" );
-    addCoupling ( gc, "tension1", cc, "tensionIn1" );
-    addCoupling ( gc, "tension2", cc, "tensionIn2" );
+    addCoupling ( sc, "tension0", cc, "tensionIn0" );
+    addCoupling ( sc, "tension1", cc, "tensionIn1" );
+    addCoupling ( sc, "tension2", cc, "tensionIn2" );
     
     addCoupling ( cc, "networkState", this, "out" );
 	}
@@ -35,7 +36,7 @@ public class CoupledController extends ViewableDigraph	{
     public void layoutForSimView()
     {
         preferredSize = new Dimension(1771, 539);
-        ((ViewableComponent)withName("GeneratorController")).setPreferredLocation(new Point(9, 18));
-        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(737, 18));
+        ((ViewableComponent)withName("SimulatorController0")).setPreferredLocation(new Point(11, 23));
+        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(842, 24));
     }
 }

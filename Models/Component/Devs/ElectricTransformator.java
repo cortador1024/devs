@@ -1,10 +1,11 @@
 package Component.Devs;
 
+import Component.Devs.lib.DevRegistry;
 import Component.Devs.lib.Reading;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 
-public class TransformatorOk extends ViewableAtomic {
+public class ElectricTransformator extends ViewableAtomic {
   
   private static int counter = 0;
   
@@ -16,12 +17,11 @@ public class TransformatorOk extends ViewableAtomic {
   
   private double relation;
   
-  public TransformatorOk ( String n, int e, double t0, double t1 ) {
-    super ( String. format ( "Trasnformator OKs %s", n ) );
+  public ElectricTransformator ( double t0, double t1 ) {
+    super ( DevRegistry. register ( ElectricTransformator.class ) );
     addOutport ( "out" );
     addInport ( "in" );
     holdIn ( "wait", INFINITY );
-    advance = e;
     nominalTension = t1;
     relation = ( ( Number ) t1 ). doubleValue () / ( ( Number ) t0 ). doubleValue ();
     tensionOut = 0;

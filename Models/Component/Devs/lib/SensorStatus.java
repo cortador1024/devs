@@ -1,6 +1,6 @@
 package Component.Devs.lib;
 
-import Component.Devs.SensorController.SensorState;
+import Component.Devs.control.SensorController.SensorState;
 import GenCol.entity;
 
 public class SensorStatus extends entity {

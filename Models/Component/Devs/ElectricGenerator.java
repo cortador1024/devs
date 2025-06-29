@@ -1,5 +1,6 @@
 package Component.Devs;
 
+import Component.Devs.lib.DevRegistry;
 import Component.Devs.lib.Reading;
 import RandomNumbers.WeibullDistribution;
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 
-public class GeneratorOk extends ViewableAtomic {
+public class ElectricGenerator extends ViewableAtomic {
   
   private static int counter = 0;
   
@@ -23,10 +24,10 @@ public class GeneratorOk extends ViewableAtomic {
 
   private double activeTension;
   
-  public GeneratorOk ( String n, int e, double t ) {
-    super ( String. format ( "Generator OK %s", n ) );
+  public ElectricGenerator ( double t ) {
+    super (DevRegistry.register ( ElectricGenerator.class ) );
     addOutport ( "out" );
-    advance = e;
+    addInport ( "in" );
     tension = t;
     step = 1;
     activeTension = t;

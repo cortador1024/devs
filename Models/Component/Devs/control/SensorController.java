@@ -1,4 +1,4 @@
-package Component.Devs;
+package Component.Devs.control;
 
 import RandomNumbers.*;
 import Component.Devs.lib.SensorStatus;

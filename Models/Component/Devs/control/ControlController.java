@@ -1,4 +1,4 @@
-package Component.Devs;
+package Component.Devs.control;
 
 
 import java.awt.Dimension;
@@ -60,7 +60,7 @@ public class ControlController extends ViewableDigraph	{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(882, 462);
+        preferredSize = new Dimension(882, 501);
         ((ViewableComponent)withName("Sensor z2 13.0")).setPreferredLocation(new Point(11, 290));
         ((ViewableComponent)withName("LineController y0")).setPreferredLocation(new Point(482, 218));
         ((ViewableComponent)withName("Sensor z1 13.0")).setPreferredLocation(new Point(9, 208));
