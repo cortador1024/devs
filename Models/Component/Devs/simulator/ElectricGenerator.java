@@ -1,59 +1,36 @@
 package Component.Devs.simulator;
 
 import Component.Devs.lib.Reading;
-import RandomNumbers.WeibullDistribution;
-import java.util.ArrayList;
+import Component.Devs.probability.distribution.Weibull;
 
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 
 public class ElectricGenerator extends ViewableAtomic {
   
-  private static int counter = 0;
   
-  private final WeibullDistribution distribution = new WeibullDistribution ( 1d, 1d, 1 );
-  
-  private int advance = 0;
+  private final Weibull weibull = new Weibull ( 1d, 1d, true );
   
   private double tension = 0;
   
-  private int step = 0;
-  
-  private ArrayList < Object [] > perturbations = new ArrayList <> ();
-
   private double activeTension;
   
+  private final double rate = 0.3333;
+  
   public ElectricGenerator ( String n, double t ) {
-    super ( n );
+    super ( String. format ( "%s Eg", n ) );
     addOutport ( "out" );
+    addOutport ( "response" );
     addInport ( "in" );
     addInport ( "state" );
-    holdIn ( "wait", INFINITY );
     tension = t;
-    step = 1;
     activeTension = t;
-  }
-  
-  public void perturbation ( int start, int length, double value ) {
-    perturbations. add ( new Object [] { start, length, value } );
   }
   
   @Override
   public void initialize() {
     super. initialize();
-    sigma = advance;
-    phase = "ok";
-  }
-  
-  private double perturbation ( int e ) {
-    for ( Object [] r : perturbations ) {
-      int e0 = ( int ) r [ 0 ];
-      int d = ( int ) r [ 1 ];
-      if ( e0 <= e && e <= e0 + d ) {
-        return ( double ) r [ 2 ];
-      }
-    }
-    return ( double ) 1;
+    holdIn ( "wait", 1 );
   }
   
   private double f ( double e ) {
@@ -61,7 +38,6 @@ public class ElectricGenerator extends ViewableAtomic {
 //    double r = Math. sin ( w0 * e ) ;
     return tension ;
   }
- 
   
   @Override
   public void deltext ( double e, message x ) {
@@ -71,15 +47,13 @@ public class ElectricGenerator extends ViewableAtomic {
   @Override
   public void deltint() {
     super. deltint ();
-    sigma = advance;
-    phase = "ok";
-    step ++;
+    holdIn ( "wait", 1 );
   }
   
   @Override
   public message out() {
     message m = new message ();
-    activeTension = f ( step );
+    activeTension = f ( 0 );
     double v = activeTension * tension;
     m. add ( makeContent ( "out", new Reading ( v ) ) );
     return m;
@@ -87,8 +61,7 @@ public class ElectricGenerator extends ViewableAtomic {
   
   @Override
   public double ta () {
-    return advance;
+    return getSigma ();
   }
-  
 
 }

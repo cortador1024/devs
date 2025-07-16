@@ -1,28 +1,29 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Component.Devs.simulator.fail;
 
 import Component.Devs.lib.Reading;
+import Component.Devs.probability.distribution.Weibull;
+
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 
-/**
- *
- * @author sysadmin
- */
-public class ResumeGenerator extends ViewableAtomic{
-
-  public ResumeGenerator ( String n ) {
-    super ( String. format ( "%s Resume", n ) );
+public class FailureGenerator extends ViewableAtomic {
+  
+  private static final double ALPHA = 46.047;
+  
+  private static final double BETA = 1.180;
+  
+  private Weibull weibull = new Weibull ( ALPHA, BETA, true );
+  
+  public FailureGenerator ( String n ) {
+    super ( String. format ( "%s Fail", n ) );
     addInport ( "state" );
     addOutport ( "response" );
   }
   
   @Override
   public void initialize() {
-    super. initialize();
+    super. initialize ();
+    holdIn ( "wait", weibull. inverse ( Math. random () ) );
   }
   
   @Override
@@ -33,6 +34,7 @@ public class ResumeGenerator extends ViewableAtomic{
   @Override
   public void deltint() {
     super. deltint ();
+    holdIn ( "fail", weibull. inverse ( Math. random () ) ); 
   }
   
   @Override
@@ -44,6 +46,7 @@ public class ResumeGenerator extends ViewableAtomic{
   
   @Override
   public double ta () {
-    return 1;
+    return sigma;
   }
+  
 }

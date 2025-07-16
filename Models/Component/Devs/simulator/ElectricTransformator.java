@@ -6,6 +6,8 @@ import view.modeling.ViewableAtomic;
 
 public class ElectricTransformator extends ViewableAtomic {
   
+  private final double rate = 0.3333;
+  
   private static int counter = 0;
   
   private int advance = 0;
@@ -19,6 +21,7 @@ public class ElectricTransformator extends ViewableAtomic {
   public ElectricTransformator ( String n, double t0, double t1 ) {
     super ( n );
     addOutport ( "out" );
+    addOutport ( "response" );
     addInport ( "in" );
     addInport ( "state" );
     holdIn ( "wait", INFINITY );
