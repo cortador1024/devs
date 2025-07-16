@@ -1,8 +1,7 @@
 package Component.Devs.simulator;
 
-import Component.Devs.lib.Reading;
+import Component.Devs.lib.PortValue;
 import Component.Devs.probability.distribution.Weibull;
-import GenCol.entity;
 
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
@@ -12,9 +11,7 @@ public class ElectricGenerator extends ViewableAtomic {
   
   private final Weibull weibull = new Weibull ( 1d, 1d, true );
   
-  private double tension = 0;
-  
-  private double activeTension;
+  private final double tension;
   
   private final double rate = 0.3333;
       
@@ -25,15 +22,12 @@ public class ElectricGenerator extends ViewableAtomic {
 //    addInport ( "in" );
 //    addInport ( "state" );
     tension = t;
-    activeTension = t;
   }
   
   @Override
   public void initialize() {
     super. initialize();
-        sigma = rate;
-    phase = "ok";
-    // holdIn ( "ok", rate );
+    holdIn ( "wait", rate );
   }
   
   private double f ( double e ) {
@@ -50,16 +44,15 @@ public class ElectricGenerator extends ViewableAtomic {
   @Override
   public void deltint() {
     super. deltint ();
-    sigma = rate;
-    phase = "ok";
-//    holdIn ( "ok", rate );
+    holdIn ( "ok", rate );
   }
   
   @Override
   public message out() {
     message m = new message ();
-    m. add ( makeContent ( "out", new Reading ( f ( 0 ) ) ) );
-    m. add ( makeContent ( "response", new entity ( getPhase () ) ) );
+    m. add ( makeContent ( "out", new PortValue ( f ( 0 ) ) ) );
+    m. add ( makeContent ( "response", new PortValue ( getPhase () ) ) );
+    holdIn ( "wait", rate );
     return m;
   }
   
