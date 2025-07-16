@@ -13,7 +13,7 @@ public class ElectricGenerator extends ViewableAtomic {
   
   private final double tension;
   
-  private final double rate = 0.3333;
+  private final double rate = 3;
       
   public ElectricGenerator ( String n, double t ) {
     super ( String. format ( "%s Eg", n ) );
@@ -22,12 +22,9 @@ public class ElectricGenerator extends ViewableAtomic {
 //    addInport ( "in" );
 //    addInport ( "state" );
     tension = t;
-  }
-  
-  @Override
-  public void initialize() {
-    super. initialize();
-    holdIn ( "wait", rate );
+    sigma = 3;
+    phase = "ok";
+    // holdIn ( "ok", rate );
   }
   
   private double f ( double e ) {
@@ -52,7 +49,6 @@ public class ElectricGenerator extends ViewableAtomic {
     message m = new message ();
     m. add ( makeContent ( "out", new PortValue ( f ( 0 ) ) ) );
     m. add ( makeContent ( "response", new PortValue ( getPhase () ) ) );
-    holdIn ( "wait", rate );
     return m;
   }
   

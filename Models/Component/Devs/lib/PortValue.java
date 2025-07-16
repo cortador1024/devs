@@ -18,4 +18,8 @@ public class PortValue extends entity {
     value = v;
   }
   
+  public Object get () {
+    return value;
+  }
+  
 }
