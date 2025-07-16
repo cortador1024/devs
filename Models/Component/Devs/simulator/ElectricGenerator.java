@@ -2,6 +2,7 @@ package Component.Devs.simulator;
 
 import Component.Devs.lib.Reading;
 import Component.Devs.probability.distribution.Weibull;
+import GenCol.entity;
 
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
@@ -16,13 +17,13 @@ public class ElectricGenerator extends ViewableAtomic {
   private double activeTension;
   
   private final double rate = 0.3333;
-  
+      
   public ElectricGenerator ( String n, double t ) {
     super ( String. format ( "%s Eg", n ) );
     addOutport ( "out" );
-    addOutport ( "response" );
-    addInport ( "in" );
-    addInport ( "state" );
+//    addOutport ( "response" );
+//    addInport ( "in" );
+//    addInport ( "state" );
     tension = t;
     activeTension = t;
   }
@@ -30,7 +31,9 @@ public class ElectricGenerator extends ViewableAtomic {
   @Override
   public void initialize() {
     super. initialize();
-    holdIn ( "wait", 1 );
+        sigma = rate;
+    phase = "ok";
+    // holdIn ( "ok", rate );
   }
   
   private double f ( double e ) {
@@ -47,21 +50,22 @@ public class ElectricGenerator extends ViewableAtomic {
   @Override
   public void deltint() {
     super. deltint ();
-    holdIn ( "wait", 1 );
+    sigma = rate;
+    phase = "ok";
+//    holdIn ( "ok", rate );
   }
   
   @Override
   public message out() {
     message m = new message ();
-    activeTension = f ( 0 );
-    double v = activeTension * tension;
-    m. add ( makeContent ( "out", new Reading ( v ) ) );
+    m. add ( makeContent ( "out", new Reading ( f ( 0 ) ) ) );
+    m. add ( makeContent ( "response", new entity ( getPhase () ) ) );
     return m;
   }
   
   @Override
   public double ta () {
-    return getSigma ();
+    return sigma;
   }
 
 }
