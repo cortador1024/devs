@@ -57,7 +57,7 @@ public void setSigma(double sigma){
 }
 
 public double getSigma(){
-return sigma;
+  return sigma;
 }
 
 public void initialize(){

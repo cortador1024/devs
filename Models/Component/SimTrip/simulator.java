@@ -64,11 +64,10 @@ public void initialize(){
 
 
 
-public void  deltext(double e,message x)
-{
+public void  deltext(double e,message x ){
 
-Continue(e);
-   for (int i=0; i< x.size();i++)
+  Continue(e);
+  for (int i=0; i< x.size();i++)
       if (messageOnPort(x,"nextTN",i)){
 
         tN = tL +myModel.ta();
@@ -98,8 +97,8 @@ Continue(e);
          wrapDeltfunc(t,m);
   //
         myModel.showState();
-         passivate();
-       }
+        passivate();
+      }
 }
 /*
 message convert(message inp,devs d){
@@ -133,13 +132,13 @@ m.print();
 }
 
 
-public  void computeInputOutput(double t){
-      if(tN == t) {
-          output = myModel.out();
-      }
-      else{
-        output = new message();
-      }
+public void computeInputOutput(double t){
+  if(tN == t) {
+    output = myModel.out();
+  }
+  else{
+    output = new message();
+  }
 }
 
 public  void  wrapDeltfunc(double t,MessageInterface x){
@@ -147,6 +146,7 @@ public  void  wrapDeltfunc(double t,MessageInterface x){
     System.out.println("ERROR RECEIVED NULL INPUT  " + myModel.toString());
     return;
   }
+ double ta = myModel.ta();
   if (x.isEmpty() && tN != t) {
     return;
   }
@@ -160,10 +160,12 @@ public  void  wrapDeltfunc(double t,MessageInterface x){
   else if(!x.isEmpty()) {
     double e = t - tL;
     myModel.deltext(e,x);
-  }
-
+  }else
+   if ( t % ta == 0 ) {
+    myModel.deltint();
+  } 
   tL = t;
-  tN = tL + myModel.ta();
+  tN = tL + ta;
 }
 
 public String getTooltipText(){

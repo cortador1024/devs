@@ -17,11 +17,23 @@ class ensemble<T> implements ensembleBasic<T>, ensembleLogic
     { // only called from ensembleWrapper
         this.col = col;
     }
+    
+    private String toString ( Object [] a ) {
+      StringBuilder sb = new StringBuilder ();
+      for ( int i = 0, top = a. length; i < top; i ++ ) {
+        String b = a [ i ] != null ? a [ i ]. toString () : "null";
+        sb. append ( b. concat ( i < top - 1 ? "," : "" ) );
+      }
+      String r = sb. toString ();
+      sb. setLength ( 0 );
+      return r;
+    }
 
     public void tellAll(String MethodNm, Class<?>[] classes, Object[] args)
     {
         col.forEach((T o) -> {
             new holder<T>(o, MethodNm, classes, args).execute();
+            System. out. printf ( String. format ( "object = %s, %s, %s\n", o. toString (), MethodNm, toString ( args ) ) );
         });
     }
 

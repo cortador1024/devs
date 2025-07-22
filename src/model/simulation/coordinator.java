@@ -242,7 +242,7 @@ public class coordinator extends atomicSimulator implements CoordinatorInterface
 		Class [] classes  = { Double.class };
 		Object[] args = { time };
 		simulators.tellAll("initialize", classes, args);
-		tN = nextTN();
+		tN = 1; // nextTN();
 	}
 
 	public double nextTN() {
@@ -252,8 +252,7 @@ public class coordinator extends atomicSimulator implements CoordinatorInterface
 		Object[] args = {};
 		simulators.AskAll(result, "nextTNDouble", classes, args);
 		TreeSet t = new TreeSet(result);
-		Double d = (Double) t.first(); // get the smallest tN
-		return d.doubleValue();
+		return ( double ) t. first(); // get the smallest tN
 	}
 
 	public void computeInputOutput(double time) {

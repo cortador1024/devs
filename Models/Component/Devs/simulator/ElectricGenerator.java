@@ -1,60 +1,80 @@
 package Component.Devs.simulator;
 
-import Component.Devs.lib.PortValue;
-import Component.Devs.probability.distribution.Weibull;
+import Component.Devs.util.DefaultViewableAtomic;
+import java.util.HashMap;
 
 import model.modeling.message;
-import view.modeling.ViewableAtomic;
 
-public class ElectricGenerator extends ViewableAtomic {
+public class ElectricGenerator extends DefaultViewableAtomic {
   
+  private static int count = 1;
   
-  private final Weibull weibull = new Weibull ( 1d, 1d, true );
+  private String state; // state = { ok, fail }
   
-  private final double tension;
-  
-  private final double rate = 3;
+  private double rate = 2;
+
+  private double outputTension;
+
+  private double nominalTension;
       
-  public ElectricGenerator ( String n, double t ) {
+  public ElectricGenerator ( String n, double t, int s ) {
     super ( String. format ( "%s Eg", n ) );
     addOutport ( "out" );
-//    addOutport ( "response" );
-//    addInport ( "in" );
-//    addInport ( "state" );
-    tension = t;
-    sigma = 3;
-    phase = "ok";
-    // holdIn ( "ok", rate );
+    addOutport ( "response" );
+    addInport ( "in" );
+    addInport ( "state" );
+    outputTension = t;
+    nominalTension = t;
+    step = s;
+    holdIn ( "ok", step ); 
+    count ++;
+  } 
+  
+  public ElectricGenerator ( String n, double t ) {
+    this ( n, t, 1 );
+  }
+  
+  @Override
+  public void initialize() {
+    
   }
   
   private double f ( double e ) {
-//    double w0 = 2 * Math. PI * 50 ;
-//    double r = Math. sin ( w0 * e ) ;
-    return tension ;
+    return outputTension ;
   }
   
   @Override
   public void deltext ( double e, message x ) {
     super. deltext ( e, x );
+    HashMap < String, Object > map = receive ( x );
+    state = ( state = ( String ) map. get ( "state" ) ) != null ? state : "";
+    switch ( state ) {
+      case "fail": {
+        outputTension = nominalTension * 0.5;
+        state = "fail";
+      } break;
+      case "restore": {
+        outputTension = nominalTension;
+        state = "ok";
+      } break;
+    }
   }
   
   @Override
   public void deltint() {
     super. deltint ();
-    holdIn ( "ok", rate );
+    holdIn ( state, step ); 
   }
   
   @Override
   public message out() {
-    message m = new message ();
-    m. add ( makeContent ( "out", new PortValue ( f ( 0 ) ) ) );
-    m. add ( makeContent ( "response", new PortValue ( getPhase () ) ) );
-    return m;
+    String p = getPhase ();
+    return send ( "out", f ( 0 ), "response", getPhase () );
   }
   
   @Override
   public double ta () {
-    return sigma;
+    return getSigma ();
   }
 
 }

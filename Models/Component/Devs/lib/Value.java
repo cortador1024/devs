@@ -10,16 +10,21 @@ import GenCol.entity;
  *
  * @author sysadmin
  */
-public class PortValue extends entity {
+public class Value extends entity {
 
   private final Object value;
   
-  public PortValue ( Object v ) {
+  public Value ( Object v ) {
     value = v;
   }
   
   public Object get () {
     return value;
+  }
+
+  @Override
+  public String toString() {
+    return String. valueOf ( value );
   }
   
 }

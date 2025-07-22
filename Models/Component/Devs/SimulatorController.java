@@ -7,7 +7,7 @@ package Component.Devs;
 import Component.Devs.simulator.ElectricGenerator;
 import Component.Devs.simulator.ElectricTransformator;
 import Component.Devs.simulator.fail.FailureGenerator;
-import Component.Devs.simulator.fail.ResumeGenerator;
+import Component.Devs.simulator.fail.RestoreGenerator;
 import java.awt.Dimension;
 import java.awt.Point;
 import view.modeling.ViewableComponent;
@@ -51,7 +51,7 @@ public class SimulatorController extends ViewableDigraph{
     add ( source );
     FailureGenerator fail = new FailureGenerator ( source. getName () );
     add ( fail );
-    ResumeGenerator resume = new ResumeGenerator ( source. getName () );
+    RestoreGenerator resume = new RestoreGenerator ( source. getName () );
     add ( resume );
     addCoupling ( source, "response", fail, "state" );
     addCoupling ( source, "response", resume, "state" );
@@ -63,7 +63,7 @@ public class SimulatorController extends ViewableDigraph{
     add ( source );
     FailureGenerator fail = new FailureGenerator ( source. getName () );
     add ( fail );
-    ResumeGenerator resume = new ResumeGenerator ( source. getName () );
+    RestoreGenerator resume = new RestoreGenerator ( source. getName () );
     add ( resume );
     addCoupling ( source, "response", fail, "state" );
     addCoupling ( source, "response", resume, "state" );

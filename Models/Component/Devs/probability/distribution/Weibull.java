@@ -57,7 +57,7 @@ public class Weibull {
       alpha * Math. pow ( - Math.log ( 1 - probability ), 1 / beta ) :
       alpha * Math. pow ( - Math. log ( probability ), 1 / beta )
     ;
-    return 0;
+    return r;
   }
   
 }
