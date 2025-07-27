@@ -62,11 +62,11 @@ public class ControlController extends ViewableDigraph	{
     {
         preferredSize = new Dimension(850, 511);
         ((ViewableComponent)withName("Sensor z2 13.0")).setPreferredLocation(new Point(-2, 394));
-        ((ViewableComponent)withName("LineController y0")).setPreferredLocation(new Point(454, 223));
+        ((ViewableComponent)withName("LineController y0")).setPreferredLocation(new Point(455, 219));
         ((ViewableComponent)withName("Sensor z1 13.0")).setPreferredLocation(new Point(-5, 222));
         ((ViewableComponent)withName("Sensor z0 33.0")).setPreferredLocation(new Point(-6, 58));
         ((ViewableComponent)withName("SegmentController x2")).setPreferredLocation(new Point(196, 397));
-        ((ViewableComponent)withName("SegmentController x1")).setPreferredLocation(new Point(196, 222));
+        ((ViewableComponent)withName("SegmentController x1")).setPreferredLocation(new Point(196, 219));
         ((ViewableComponent)withName("SegmentController x0")).setPreferredLocation(new Point(200, 59));
     }
 }

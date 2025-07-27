@@ -15,6 +15,7 @@ public class Value extends entity {
   private final Object value;
   
   public Value ( Object v ) {
+    super ( "Value:" );
     value = v;
   }
   
@@ -24,7 +25,7 @@ public class Value extends entity {
 
   @Override
   public String toString() {
-    return String. valueOf ( value );
+    return String. format ( "%s = %s", name, value );
   }
   
 }

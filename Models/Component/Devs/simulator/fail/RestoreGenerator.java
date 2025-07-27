@@ -30,19 +30,13 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   
   private final static String DEFAULT_IN = "state";
   
-  public RestoreGenerator ( String n, int s ) {
+  public RestoreGenerator ( String n ) {
     super ( String. format ( "%s Restore", n ) );
     addInport ( DEFAULT_IN );
     addOutport ( DEFAULT_OUT );
-    // holdIn ( "wait", weibull. inverse ( Math. random () ) );
-    step = s;
-    holdIn ( "wait", step );
+    holdIn ( "wait", INFINITY );
   }
   
-  public RestoreGenerator ( String n ) {
-    this ( n, 1 );
-  }
-
   @Override
   public void initialize() {
     
@@ -51,21 +45,20 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   @Override
   public void deltext ( double e, message x ) {
     super. deltext ( e, x );
-    /* 
+    Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    String state = ( String ) map. get ( DEFAULT_IN );
+    state = ( String ) map. get ( DEFAULT_IN );
     switch ( state ) {
       case "fail": {
-        holdIn ( "wait", weibull. inverse ( Math. random () ) );
+        holdIn ( "working", weibull. inverse ( Math. random () ) );
       } break;
     } 
-    */
   }
   
   @Override
   public void deltint() {
     super. deltint ();
-    holdIn ( "wait", step );
+    holdIn ( "wait", INFINITY );
   }
   
   @Override

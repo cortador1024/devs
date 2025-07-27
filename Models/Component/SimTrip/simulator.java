@@ -142,11 +142,11 @@ public void computeInputOutput(double t){
 }
 
 public  void  wrapDeltfunc(double t,MessageInterface x){
- if(x == null){
+  if(x == null){
     System.out.println("ERROR RECEIVED NULL INPUT  " + myModel.toString());
     return;
   }
- double ta = myModel.ta();
+ 
   if (x.isEmpty() && tN != t) {
     return;
   }
@@ -160,12 +160,9 @@ public  void  wrapDeltfunc(double t,MessageInterface x){
   else if(!x.isEmpty()) {
     double e = t - tL;
     myModel.deltext(e,x);
-  }else
-   if ( t % ta == 0 ) {
-    myModel.deltint();
-  } 
+  }
   tL = t;
-  tN = tL + ta;
+  tN = tL + myModel.ta();
 }
 
 public String getTooltipText(){

@@ -1,23 +1,21 @@
 package Component.Devs.simulator;
 
+import Component.Devs.probability.distribution.Weibull;
 import Component.Devs.util.DefaultViewableAtomic;
+import RandomNumbers.WeibullDistribution;
 import java.util.HashMap;
 
 import model.modeling.message;
 
 public class ElectricGenerator extends DefaultViewableAtomic {
   
-  private static int count = 1;
-  
   private String state; // state = { ok, fail }
   
-  private double rate = 2;
-
   private double outputTension;
 
   private double nominalTension;
       
-  public ElectricGenerator ( String n, double t, int s ) {
+  public ElectricGenerator ( String n, double t ) {
     super ( String. format ( "%s Eg", n ) );
     addOutport ( "out" );
     addOutport ( "response" );
@@ -25,14 +23,8 @@ public class ElectricGenerator extends DefaultViewableAtomic {
     addInport ( "state" );
     outputTension = t;
     nominalTension = t;
-    step = s;
-    holdIn ( "ok", step ); 
-    count ++;
+    holdIn ( "ok", INFINITY ); 
   } 
-  
-  public ElectricGenerator ( String n, double t ) {
-    this ( n, t, 1 );
-  }
   
   @Override
   public void initialize() {
@@ -46,12 +38,13 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   @Override
   public void deltext ( double e, message x ) {
     super. deltext ( e, x );
+    Continue ( e );
     HashMap < String, Object > map = receive ( x );
     state = ( state = ( String ) map. get ( "state" ) ) != null ? state : "";
     switch ( state ) {
       case "fail": {
-        outputTension = nominalTension * 0.5;
-        state = "fail";
+        Object level = ( level = map. get ( "level" ) ) == null ? 0d: level;
+        outputTension = nominalTension * ( double ) level;
       } break;
       case "restore": {
         outputTension = nominalTension;
@@ -63,13 +56,13 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   @Override
   public void deltint() {
     super. deltint ();
-    holdIn ( state, step ); 
+    holdIn ( state, INFINITY ); 
   }
   
   @Override
   public message out() {
     String p = getPhase ();
-    return send ( "out", f ( 0 ), "response", getPhase () );
+    return send ( "out", f ( getSigma () ), "response", getPhase () );
   }
   
   @Override

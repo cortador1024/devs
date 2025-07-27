@@ -6,11 +6,13 @@
  */
 package GenCol;
 
-public interface EntityInterface
-{ // for some reason Entity doesn't generate .class file
-    public String getName();
+public interface EntityInterface { 
 
-    public Object equalName(String name);
+// for some reason Entity doesn't generate .class file
+  public String getName();
 
-    public ExternalRepresentation getExtRep();
+  public Object equalName(String name);
+
+  public ExternalRepresentation getExtRep();
+
 }

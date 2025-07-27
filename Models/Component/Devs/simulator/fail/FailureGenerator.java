@@ -2,6 +2,7 @@ package Component.Devs.simulator.fail;
 
 import Component.Devs.util.DefaultViewableAtomic;
 import Component.Devs.probability.distribution.Weibull;
+import RandomNumbers.WeibullDistribution;
 import java.util.HashMap;
 
 import model.modeling.message;
@@ -22,18 +23,16 @@ public class FailureGenerator extends DefaultViewableAtomic {
   
   private final static String DEFAULT_IN = "state";
   
-  public FailureGenerator ( String n, int s ) {
+  private final WeibullDistribution wdist;
+  
+  public FailureGenerator ( String n ) {
     super ( String. format ( "%s Fail", n ) );
     addInport ( DEFAULT_IN );
     addOutport ( DEFAULT_OUT );
-    step = s;
-    holdIn ( "wait", step ); 
+    wdist = new WeibullDistribution ( ALPHA, BETA, 1);
+    holdIn ( "working", weibull. inverse ( Math. random () ) ); 
   }
   
-  public FailureGenerator ( String n ) {
-    this ( n, 1 );
-  }
-
   @Override
   public void initialize() {
     
@@ -43,25 +42,27 @@ public class FailureGenerator extends DefaultViewableAtomic {
   @Override
   public void deltext ( double e, message x ) {
     super. deltext ( e, x );
-    /*
+    Continue ( e );
     HashMap < String, Object > map = receive ( x );
     String state = ( String ) map. get ( DEFAULT_IN );
     switch ( state ) {
       case "restore": {
-        holdIn ( "wait", weibull. inverse ( Math. random () ) );
+        double d = wdist. get ();
+        d =  weibull. inverse ( Math. random () );
+        holdIn ( "working",d );
       } break;
-    } */
+    } 
   }
   
   @Override
   public void deltint() {
     super. deltint ();
-    holdIn ( "wait", step );
+    holdIn ( "wait", INFINITY );
   }
   
   @Override
   public message out() {
-    return send ( DEFAULT_OUT, "fail" );
+    return send ( DEFAULT_OUT, "fail", "level", 1 );
   }
   
   @Override

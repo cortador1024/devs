@@ -5,6 +5,7 @@
 package Component.Devs;
 
 import Component.Devs.simulator.ElectricGenerator;
+import Component.Devs.simulator.ElectricTransformator;
 import Component.Devs.simulator.fail.FailureGenerator;
 import Component.Devs.simulator.fail.RestoreGenerator;
 import java.awt.Dimension;
@@ -16,26 +17,28 @@ import view.modeling.ViewableDigraph;
  *
  * @author sysadmin
  */
-public class GeneratorController extends ViewableDigraph{
+public class TransformatorController extends ViewableDigraph{
 
-  private ElectricGenerator e0, e1, e2;
+  private ElectricTransformator e0;
   private FailureGenerator f0;
   private RestoreGenerator r0;
 
-  public GeneratorController( String n ) {
-    super ( String. format ( "GeneratorController.%s", n ) );
+  public TransformatorController( String n ) {
+    super ( String. format ( "TransformatorController.%s", n ) );
     addOutport ( "out" );
-
-    add ( e0 = new ElectricGenerator ( String. format ( "%s.e0", n ), 33d ) );
-    add ( f0 = new FailureGenerator ( String. format ( "%s.f0", n ) ) );
-    add ( r0 = new RestoreGenerator ( String. format ( "%s.r0", n ) ) );
+    addInport ( "in" );
+    add ( e0 = new ElectricTransformator ( String. format ( "%s.eg0", n ), 33d, 13d ) );
+    add ( f0 = new FailureGenerator ( String. format ( "%s.fg0", n ) ) );
+    add ( r0 = new RestoreGenerator ( String. format ( "%s.rg0", n ) ) );
     
-    addCoupling ( e0, "out", this, "out" );
+    addCoupling ( this, "in", e0, "in" );
+    
     addCoupling ( f0, "response", e0, "state" );
     addCoupling ( f0, "response", r0, "state" );
     addCoupling ( r0, "response", e0, "state" );
     addCoupling ( r0, "response", f0, "state" );
-   
+    
+    addCoupling ( e0, "out", this, "out" );
   }
 
     /**
@@ -45,9 +48,10 @@ public class GeneratorController extends ViewableDigraph{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(387, 186);
-        ((ViewableComponent)withName("eg0.r0 Restore")).setPreferredLocation(new Point(18, 122));
-        ((ViewableComponent)withName("eg0.f0 Fail")).setPreferredLocation(new Point(20, 22));
-        ((ViewableComponent)withName("eg0.e0 Eg")).setPreferredLocation(new Point(149, 77));
+        preferredSize = new Dimension(362, 178);
+        ((ViewableComponent)withName("et1.eg0")).setPreferredLocation(new Point(107, 77));
+        ((ViewableComponent)withName("et1.fg0 Fail")).setPreferredLocation(new Point(-9, 26));
+        ((ViewableComponent)withName("et1.rg0 Restore")).setPreferredLocation(new Point(-9, 121));
+        
     }
 }

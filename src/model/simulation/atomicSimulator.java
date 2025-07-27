@@ -146,7 +146,6 @@ public synchronized void wrapDeltfunc ( double t, MessageInterface < Object > x 
     myModel.deltint();
   } 
   wrapDeltfuncHook2();
-  double p = tL;
   tL = t;
   tN = tL + myModel. ta ();  
 }

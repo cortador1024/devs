@@ -33,7 +33,7 @@ class ensemble<T> implements ensembleBasic<T>, ensembleLogic
     {
         col.forEach((T o) -> {
             new holder<T>(o, MethodNm, classes, args).execute();
-            System. out. printf ( String. format ( "object = %s, %s, %s\n", o. toString (), MethodNm, toString ( args ) ) );
+            // System. out. printf ( String. format ( "object = %s, %s, %s\n", o. toString (), MethodNm, toString ( args ) ) );
         });
     }
 

@@ -18,8 +18,6 @@ public class DefaultViewableAtomic extends ViewableAtomic {
  
   protected int [] times;
   
-  protected int step = 1;
-  
   public DefaultViewableAtomic ( String name ) {
     super ( name );
   }
