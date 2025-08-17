@@ -1,6 +1,7 @@
 package Component.Devs;
 
 
+import Component.Devs.operational.SimulatorController;
 import Component.Devs.control.ControlController;
 import Component.Devs.registrator.RegistratorController;
 import java.awt.Dimension;
