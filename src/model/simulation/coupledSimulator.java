@@ -81,8 +81,7 @@ public class coupledSimulator extends atomicSimulator implements CoupledSimulato
     @Override
     public Double nextTNDouble()
     {
-      double d = nextTN();
-      return d;
+        return nextTN();
     }
 
     @Override

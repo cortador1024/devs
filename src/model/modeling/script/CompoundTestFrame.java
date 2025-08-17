@@ -1,6 +1,5 @@
 package model.modeling.script;
 
-import java.awt.Component;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Assertions;

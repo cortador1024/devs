@@ -7,6 +7,8 @@ package model.modeling;
 
 import java.util.Objects;
 
+import org.eclipse.birt.chart.ui.swt.composites.IntegerSpinControl;
+
 import GenCol.EntityInterface;
 import GenCol.entity;
 

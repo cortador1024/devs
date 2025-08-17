@@ -47,7 +47,7 @@ implements RTCoordinatorInterface{
 	public void initialize(){
 		tL = timeInMillis();
 		Class [] classes  = { Double.class };
-		Object [] args  = {tL/1000};
+		Object [] args  = { tL/1000d };
 		simulators.tellAll("initialize",classes,args);
 	}
 

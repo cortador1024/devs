@@ -43,7 +43,7 @@ public class Bag<T> extends entity implements BagInterface<T>, Collection<T>
         
         for (int i = 1; i <= n; i++)
         {
-            Integer old = this.relation.put(o, k + i);
+            Integer old = this.relation.put(o, new Integer(k + i));
             changed |= (old != null);
         }
         
@@ -53,7 +53,7 @@ public class Bag<T> extends entity implements BagInterface<T>, Collection<T>
     @Override
     public boolean add(T o)
     {
-        return this.relation.put(o, numberOf(o) + 1) != null;
+        return this.relation.put(o, new Integer(numberOf(o) + 1)) != null;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Bag<T> extends entity implements BagInterface<T>, Collection<T>
             @SuppressWarnings("unchecked")
             T obj = (T) o;
 
-            if (this.relation.remove(obj, numberOf(obj)))
+            if (this.relation.remove(obj, new Integer(numberOf(obj))))
             {
                 return true;
             }

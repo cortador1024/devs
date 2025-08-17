@@ -78,7 +78,7 @@ public void  simulate(int numIter,double observeTime)
 
 public void tellAllSimulate(int numIter){
 Class [] classes  = { Integer.class };
-Object [] args  = {numIter};
+Object [] args  = { numIter };
 simulators.tellAll("simulate",classes,args);
 }
 

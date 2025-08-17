@@ -57,7 +57,7 @@ public void setSigma(double sigma){
 }
 
 public double getSigma(){
-  return sigma;
+return sigma;
 }
 
 public void initialize(){
@@ -130,9 +130,7 @@ public boolean isStateDefaultTracked(String name, TrackingType setting)
 
     public void passivateIn(String phase) {holdIn(phase, INFINITY);}
     public void passivate() {passivateIn("passive");}
-    public void holdIn(String phase, double sigma) {
-      holdIn(phase, sigma, null);
-    }
+    public void holdIn(String phase, double sigma) {holdIn(phase, sigma, null);}
 
     public void holdIn(String phase, double sigma,ActivityInterface a)
     {

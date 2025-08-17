@@ -15,69 +15,54 @@ import model.modeling.message;
 import model.modeling.port;
 import util.Logging;
 
-public class atomicSimulator implements AtomicSimulatorInterface {
-//for usual devs
+public class atomicSimulator
+             implements AtomicSimulatorInterface {//for usual devs
 
-protected double tL;
-
-protected double tN;
-
-public MessageInterface < Object > input, output, inputForTimeView, outputForTimeView;
-
+protected double tL,tN;
+public MessageInterface<Object> input,output, inputForTimeView, outputForTimeView;
 protected IOBasicDevs myModel;
 
-public atomicSimulator (){
-}
+public atomicSimulator(){}
 
 public atomicSimulator(IOBasicDevs atomic){
-  myModel = atomic;
-  input = new message();
-  output = new message();
-  inputForTimeView = new message();
-  outputForTimeView = new message();
+myModel = atomic;
+input = new message();
+output = new message();
+inputForTimeView = new message();
+outputForTimeView = new message();
 }
 
-public double nextTN () {
-  return tN;
+public double nextTN(){
+return tN;
 }
 
-public boolean  equalTN ( double t ){
-  return t == tN;
+public boolean  equalTN(double t){return t == tN;}
+
+public double getTN(){
+return tN;
 }
 
-public double getTN () {
-  return tN;
+public double getTL(){
+return tL;
 }
 
-public double getTL () {
-  return tL;
-}
+public synchronized MessageInterface<Object>  getOutput(){return output;}
 
-public synchronized MessageInterface<Object>  getOutput () { 
-  return output;
-}
-
-public synchronized MessageInterface<Object>  getInput () { 
-  return input;
-}
+public synchronized MessageInterface<Object>  getInput(){return input;}
 
 /*
  * Add the outputForTimeView/inputForTimeView as an extra message container showing input and output for timeView. Chanded by Chao. 12/1/2017
  */
-public synchronized MessageInterface  getOutputForTimeView(){
-  return outputForTimeView;
-}
+public synchronized MessageInterface  getOutputForTimeView(){return outputForTimeView;}
 
-public synchronized MessageInterface  getInputForTimeView(){
-  return inputForTimeView;
-}
+public synchronized MessageInterface  getInputForTimeView(){return inputForTimeView;}
 
 public Double nextTNDouble(){
-  return nextTN();
+return new Double(nextTN());
 }
 
 public synchronized void showModelState(){
-  myModel.showState();
+myModel.showState();
 }
 
 public  synchronized void initialize(){ //for non real time usage, assume the time begins at 0
@@ -90,18 +75,17 @@ public  synchronized void initialize(){ //for non real time usage, assume the ti
  }
 
 public synchronized  void  initialize(Double d){
-  initialize(d.doubleValue());
+initialize(d.doubleValue());
 }
 
-public  synchronized void initialize ( double currentTime ){     // for real time usage
-  myModel. initialize ();
-  tL = currentTime;
-  tN = tL + myModel. ta ();
-  Logging. log ( String. format ( "INITIALIZATION, time: %s, next event at: %s", tL, tN ), 
-    Logging. full 
-  );
-  myModel. showState ();
-}
+public  synchronized void initialize(double currentTime){     // for real time usage
+ myModel.initialize();
+ tL = currentTime;
+ tN = tL + myModel.ta();
+ Logging.log("INITIALIZATION, time: " + tL +", next event at: "+tN,
+    Logging.full);
+ myModel.showState();
+ }
 
 /*
  * The input and output for timeView will be reset after the
@@ -112,57 +96,59 @@ public void resetIOforTimeView(){
 	outputForTimeView = new message();
 }
 
-public synchronized void DeltFunc ( Double d ){
-  DeltFunc(d.doubleValue());
-}
 
-public synchronized void DeltFunc ( double t ){
+public synchronized void DeltFunc(Double d){
+DeltFunc(d.doubleValue());
+}
+public  synchronized void DeltFunc(double t){
   wrapDeltfunc(t,new message());
 }
 
 public  synchronized void  wrapDeltfunc(double t){
-  wrapDeltfunc ( t, input ); //changed to work with activity
-  input = new message();
+ wrapDeltfunc(t,input); //changed to work with activity
+ input = new message();
 }
 
 @Override
-public synchronized void wrapDeltfunc ( double t, MessageInterface < Object > x ){
-  if ( x == null ){
+public  synchronized void  wrapDeltfunc(double t,MessageInterface<Object> x){
+ if(x == null){
     System.out.println("ERROR RECEIVED NULL INPUT  " + myModel.toString());
     return;
   }
-  if ( x. isEmpty () && tN != t ) {
+  if (x.isEmpty() && !equalTN(t)) {
     return;
   }
-  if((!x.isEmpty()) && tN == t ) {
+  else if((!x.isEmpty()) && equalTN(t)) {
     double e = t - tL;
     myModel.deltcon(e,x);
-  } else 
-  if(!x.isEmpty()) {
+  }
+  else if(equalTN(t)) {
+    myModel.deltint();
+  }
+  else if(!x.isEmpty()) {
     double e = t - tL;
     myModel.deltext(e,x);
-  } else
-  if ( tN == t ) {
-    myModel.deltint();
-  } 
+  }
   wrapDeltfuncHook2();
   tL = t;
-  tN = tL + myModel. ta ();  
+  tN = tL + myModel.ta();
 }
 
 public  void computeInputOutput(Double d){
-  computeInputOutput(d.doubleValue());
+computeInputOutput(d.doubleValue());
 }
 
 public  void computeInputOutput(double t){
-  if( equalTN ( t ) ) {
-    output = myModel.Out();
-    outputForTimeView = myModel.Out();
-  } else {
-    output = new message();//bpz
-  }
+      if(equalTN(t)) {
+          
+        output = myModel.Out();
+        outputForTimeView = myModel.Out();
+      }
+      else{
+        output = new message();//bpz
+      }
 
-  computeInputOutputHook1();
+      computeInputOutputHook1();
 }
 
 public void  simulate(int numIter)
@@ -193,20 +179,18 @@ public synchronized void  showOutput(){
         output.print();
 }
 
-public MessageInterface<Object> makeMessage(){
-  return new message();
-}
+public MessageInterface<Object> makeMessage(){return new message();}
 
 public void simInject(double e,PortInterface p,EntityInterface value){
-  MessageInterface<Object> m = makeMessage();
-  m.add(myModel.makeContent(p,value));
-  simInject(e,m);
+MessageInterface<Object> m = makeMessage();
+m.add(myModel.makeContent(p,value));
+simInject(e,m);
 }
 
 @Override
 public void simInject(double e,String portName,EntityInterface value){
-  //  for use in usual devs
-  simInject(e,new port(portName),value);
+                                            //  for use in usual devs
+simInject(e,new port(portName),value);
 }
 
 @Override

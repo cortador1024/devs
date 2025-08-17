@@ -101,7 +101,7 @@ public class RTCoordinatorClient extends RTcoordinator
             // tell all of this coordinator's subordinate simulators to
             // simulate
             Class[] classes = { Integer.class };
-            Object[] args = {numIterations};
+            Object[] args = { numIterations };
             simulators.tellAll("simulate", classes, args);
         }
 

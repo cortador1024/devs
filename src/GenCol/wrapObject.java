@@ -6,7 +6,7 @@ public class wrapObject<T>
 
     public Boolean isContained(ensembleBag<T> e)
     {
-        return e.contains(kernel);
+        return (Boolean)e.contains(kernel);
     }
 
     public synchronized void addSelf(ensembleBag<T> e)

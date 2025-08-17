@@ -1,16 +1,17 @@
 package Component.Devs.control;
 
-import Component.Devs.lib.SensorStatus;
-import Component.Devs.lib.Reading;
+import static Component.Devs.control.SensorController.SensorPhase.STREAM;
+import static Component.Devs.control.SensorController.SensorPhase.WAIT;
+import Component.Devs.lib.DefaultViewableAtomic;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.modeling.message;
-import view.modeling.ViewableAtomic;
 
-public class SensorController extends ViewableAtomic	{
+public class SensorController extends DefaultViewableAtomic	{
 
   private double variable;
-	
+  
   public enum SensorPhase {
     
     WAIT ( "wait" ),
@@ -41,7 +42,7 @@ public class SensorController extends ViewableAtomic	{
     
     ERROR  ( "error" );
     
-    private final String name ;
+    public final String name ;
     
     SensorState ( String n ) {
       name = n;
@@ -74,81 +75,48 @@ public class SensorController extends ViewableAtomic	{
 	  holdIn ( String. valueOf ( SensorPhase.WAIT ), INFINITY );
   }
 	
-	@Override
-	public String getPhase() {
-	  return String. valueOf ( phase );
-	}
-	
   @Override
   public double ta () {
-    return sigma;
+    return getSigma ();
   }
 	
 	@Override
 	public void deltext ( double e, message x ) {
 	  Continue ( e );
-	  Reading ze = ( Reading ) x. getValOnPort ( "tension", 0 );
-	  int atCase = zl0. size () < SENSOR_MIN_READ_COUNT ? 
-      1 : 
-      2
-    ;
-	  switch ( atCase ) {
-	    case 1: {
-	      holdIn ( String. valueOf ( SensorPhase.WAIT ), 
-          INFINITY 
-        );
-	    } break;
-	    case 2: {
-	      holdIn ( String. valueOf ( SensorPhase.STREAM ),
-          // tiempo de proceso del sensor para enviar la lectura $variable
-	        variable
-	      );
-	      zl0. remove ( 0 );
-	    } break;
-	  }
-	  zl0. add ( ( double ) ze. read );
+    HashMap < String, Object > msg = receive ( x );
+    Object val = null;
+    val = msg. get ( "tension" );
+    if ( val == null ) {
+      return;
+    }
+    zl0. add ( ( double ) val );
+    if ( zl0. size () > SENSOR_MIN_READ_COUNT ) {
+      holdIn ( String. valueOf ( SensorPhase.STREAM ), 1 );
+      zl0. remove ( 0 );
+      return;
+    } 
+    holdIn ( String. valueOf ( SensorPhase.WAIT ), INFINITY );
 	}
 	
 	@Override
 	public void deltint () {
-	  int atCase = phaseIs ( String. valueOf ( SensorPhase. STREAM ) ) ? 
-      2 : 
-      1
-    ;
-	  switch ( atCase ) {
-	    case 2: {
-	      holdIn ( String. valueOf ( SensorPhase.WAIT ),
-	        INFINITY
-	      );
-	      zl0. clear ();  
-	    } break;
-	  }
-	}
-	
-	private String toString ( ArrayList < Double > l ) {
-	  StringBuilder sb = new StringBuilder ();
-	  int i = 0; for ( Double li : l ) {
-	    sb. append ( String. format ( "%s%s", li, i < l. size () -1 ? "\n" : "" ) );
-	    i ++;
-	  }
-	  String s = sb. toString ();
-	  sb. setLength ( 0 );
-	  return s;
+    if ( ! phaseIs ( STREAM. name ) ) {
+      return;
+    }
+    holdIn ( WAIT. name, INFINITY );
+    zl0. clear ();  
 	}
 	
 	@Override
 	public message out () {
-	  
-	  if ( ! phaseIs ( String. valueOf ( SensorPhase.STREAM ) ) ) {
+	  if ( ! phaseIs ( STREAM. name ) ) {
 	    return super. out ();
 	  }
 	  zl1 = zg ( zl0 );
-	  System. out. println ( String. format ( "{ zl0: [ %s ], zl1: %s }", toString ( zl0 ), zl1 ) );
-    
-    message m = new message ();
-	  m. add ( makeContent ( "state", new SensorStatus ( zf ( zl1, NOMINAL_TENSION ), zl1 ) ) );
-	  return m;
+    Object [] out = new Object [] { getName (), zf ( zl1, NOMINAL_TENSION ), zl1 };
+    return send ( "state", out );
 	}
+  
 	@Override
 	public String getTooltipText() {
 	  return toString ( zl0 );

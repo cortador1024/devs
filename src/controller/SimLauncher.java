@@ -42,9 +42,6 @@ import facade.simulation.FSimulator;
 import facade.simulation.CAsimulation.FCASimulator;
 import facade.simulation.CCAsimulation.FCCASimulator;
 import facade.simulation.hooks.SimulatorHookListener;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
-import javax.swing.UIManager;
 import model.modeling.CAModels.TwoDimCellSpace;
 import model.modeling.CCAModels.CCAsSpaceModel;
 import util.classUtils.DevsModelLoader;
@@ -70,33 +67,18 @@ public class SimLauncher
     private Optional<DatabaseTrackerManager> dbTrackerManager;
     private TrackingDataHandler trackingDataHandler;
     private String lastUsedDirectory;
-    
     static int sc;
-    
-    public final static Logger logger = System. getLogger ( "SimLauncher" );
-    
+
     public static void main(String[] args)
     {
-      new SimLauncher();
-        
+        new SimLauncher();
     }
 
     public SimLauncher()
     {
-      try {
-        UIManager. setLookAndFeel ( UIManager. getSystemLookAndFeelClassName () );
-      } catch (ClassNotFoundException ex) {
-        logger. log ( Level.WARNING, ( String ) "", ex );
-      } catch (InstantiationException ex) {
-        logger. log ( Level.WARNING, ( String ) "", ex );
-      } catch (IllegalAccessException ex) {
-        logger. log ( Level.WARNING, ( String ) "", ex );
-      } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        logger. log ( Level.WARNING, ( String ) "", ex );
-      }
         view = new View(this);
-        lastUsedDirectory = "c:/var/lib/devs/";
-        view. createLoadPage();
+        lastUsedDirectory = "";
+        view.createLoadPage();
         
         dbConfig = Optional.empty();
         dbTrackerManager = Optional.empty();

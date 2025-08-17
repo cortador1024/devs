@@ -1,16 +1,16 @@
 package Component.Devs.control;
 
-import Component.Devs.lib.SensorStatus;
-import Component.Devs.lib.LineStatus;
-import Component.Devs.control.SensorController.SensorPhase;
+import static Component.Devs.control.LineController.LinePhase.STREAM;
+import static Component.Devs.control.LineController.LinePhase.WAIT;
 import Component.Devs.control.SensorController.SensorState;
+import Component.Devs.lib.DefaultViewableAtomic;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.modeling.message;
-import view.modeling.ViewableAtomic;
 
-public class LineController extends ViewableAtomic 	{
-  
+public class LineController extends DefaultViewableAtomic 	{
+
   public enum LinePhase {
     
     WAIT ( "wait" ),
@@ -28,14 +28,14 @@ public class LineController extends ViewableAtomic 	{
     }  
      
   }
+
+  private Object [] yl0 = new Object [ 3 ] ;
   
-  private ArrayList < SensorStatus > queue = new ArrayList <> ();
-	
-  private ArrayList < SensorStatus > yl0 = new ArrayList <> ();
+  private Object [] array = new Object [ 3 ];
   
   private ArrayList < Integer > yl1 = new ArrayList <> ();
   
-	public LineController ( String name) {
+	public LineController ( String name ) {
 		super ( String. format ( "LineController %s", name ) );
 		addInport ( "stateIn0" );
 		addInport ( "stateIn1" );
@@ -47,139 +47,112 @@ public class LineController extends ViewableAtomic 	{
   public void initialize() {
 	  
 	  holdIn ( String. valueOf ( LinePhase.WAIT ), INFINITY );
-	  clearList ( queue );
-	  clearList ( yl0 );
+	  clear ( yl0 );
+    clear ( array );
   }
 	
 	@Override
   public double ta() {
-    return sigma;
+    return getSigma ();
   }
 	
-  @Override
-  public String getPhase() {
-    return String. valueOf ( phase );
-  }
-  
   public int yi ( SensorState s ) {
     return s. ordinal ();
   }
   
-  public int yh ( SensorState s ) {
+  public Object yh ( SensorState s ) {
     int o = yi ( s );
     return o != 0 ? 
       o : 
-      -1
+      null
     ;
   }
 	  
-	public SensorStatus yg ( SensorStatus x ) {
-	  return yh ( x. state ) == -1 ? 
-      null : 
-	    x
+	public Object [] yg ( Object [] x ) {
+    Object r = yh ( ( SensorState ) x [ 0 ] );
+	  return r != null ? 
+      new Object [] { r, x [ 1 ] } :
+      null
     ;
 	}
 	
-	public SensorStatus yf ( SensorStatus x, SensorStatus y ) {
-	  if ( yh ( x. state ) != 4 && yh ( x. state ) <= yh ( y. state ) ) {
-      return y;
+	public Object [] yf ( Object [] x, Object [] y ) {
+	  SensorState sx = ( SensorState ) x [ 0 ];
+    SensorState sy = ( SensorState ) y [ 0 ];
+    try {
+      Object val = null;
+      int yhx = ( val = yh ( sx ) ) != null ? ( int ) val : -1;
+      int yhy = ( val = yh ( sy ) ) != null ? ( int ) val : -1;
+      if ( yhx == -1 && yhy == yhx ) {
+        return null;
+      }
+      if ( yhx != 4 && yhx <= yhy ) {
+        return y;
+      }
+    } catch ( Exception ex ) {
+      System. out. println ( "" );
     }
-	  if ( yh ( x. state ) != 4 && yh ( y. state ) == -1 ) {
-	    return new SensorStatus ( SensorState.ERROR, y. read );
-    }
-	  return new SensorStatus ( SensorState.ERROR, y. read );
+	  return new Object [] { SensorState.ERROR, y [ 1 ] };
 	}
 	
-	private boolean isQueueSet ( ArrayList < SensorStatus > q ) {
+	private boolean isReady ( Object [] q ) {
 	  int count = 0;
-	  for ( SensorStatus o : q ) {
+	  for ( Object o : q ) {
 	    if ( o == null ) {
 	      continue;
 	    }
 	    count ++;
 	  }
-	  return q. size () == count;
+	  return q. length == count;
 	}
 	
-	private void clearList ( ArrayList < SensorStatus > q ) {
-	  q. clear ();
-	  for ( int i = 0, top = 3; i < top; i ++ ) {
-	    q. add ( null );
+	private void clear ( Object [] q ) {
+	  for ( int i = 0, top = q. length; i < top; i ++ ) {
+	    q [ i ] = null;
 	  }
-	}
-	
-	private void setList ( ArrayList < SensorStatus > q, int i, SensorStatus v ) {
-	  if ( v == null ) {
-	    return;
-	  }
-    q. set ( i, v );
-	}
-  
-	private void setResponse ( SensorStatus x ) { 
-	  SensorStatus s = yg ( x );
-	  if ( s == null ) {
-	    return;
-	  }
-	  yl0. set ( 0, s );
-	}
-	
-	private void setResponse ( SensorStatus x, SensorStatus y, int i ) {
-    SensorStatus s = yf( x, y);
-    if ( s == null ) {
-      return;
-    }
-    yl0. set ( i, s );
-  }
-	
-	private SensorStatus getValue ( message x, String k ) {
-	  SensorStatus s = null;
-	  for ( int i = 0, top = x. size (); i < top; i ++ ) {
-	    if ( ! messageOnPort ( x, k, i ) ) {
-	      continue;
-	    }
-      return ( SensorStatus ) x. getValOnPort ( k, i );
-	  }
-	  return ( SensorStatus ) null;
 	}
 	
 	@Override
   public void deltext ( double e, message x ) {
-	  Continue ( e );
-	  setList ( queue, 0, getValue ( x, "stateIn0" ) );
-    setList ( queue, 1, getValue ( x, "stateIn1" ) );
-    setList ( queue, 2, getValue ( x, "stateIn2" ) );
-    if ( ! isQueueSet ( queue ) ) {
-      holdIn ( String. valueOf ( LinePhase. WAIT ), INFINITY );
+    Continue ( e );
+	  HashMap < String, Object > msg = receive ( x );
+    Object [] val = null;
+    val = ( Object [] ) msg. get ( "stateIn0" );
+    if ( val != null ) {
+      array [ 0 ] = val;
+    }
+    val = ( Object [] ) msg. get ( "stateIn1" );
+    if ( val != null ) {
+      array [ 1 ] = val;
+    }
+    val = ( Object [] ) msg. get ( "stateIn2" );
+    if ( val != null ) {
+      array [ 2 ] = val;
+    }
+    if ( ! isReady ( array ) ) {
+      holdIn ( WAIT. name, INFINITY );
       return;
     }
-    SensorStatus yl00 = queue. remove ( 0 );
-    setResponse ( yl00 );
-        
-    int i = 1; while ( ! queue. isEmpty () ) {
-      SensorStatus yl0i = queue. remove ( 0 );
-      setResponse ( yl00, yl0i, i );
-      i ++;
+    yl0 [ 0 ] = yg ( ( Object [] ) array [ 0 ] );
+    for ( int i = 1, top = array. length; i < top; i ++ ) {
+      yl0 [ i ] = yf ( ( Object [] ) array [ 0 ], ( Object [] ) array [ i ] );
     }
-    holdIn ( String. valueOf ( LinePhase. STREAM ), 0 );
+    holdIn ( STREAM. name, 0 );
   }
   
   @Override
   public void deltint() {
-    clearList ( queue );
-    clearList ( yl0 );
-    holdIn ( String. valueOf ( LinePhase. WAIT ), INFINITY );
+    clear ( array );
+    clear ( yl0 );
+    holdIn ( WAIT. name, INFINITY );
   }
   
   @Override
   public message out () {
-    if ( ! phaseIs ( String. valueOf ( SensorPhase.STREAM ) ) ) {
+    if ( ! phaseIs ( STREAM. name ) ) {
       return super. out ();
     }
-    message m = new message ();
-    m. add ( makeContent ( "stateOut", new LineStatus ( yl0 ) ) );
-    return m;
+    return send ( "stateOut", new Object [] { getName (), yl0 }  );
   }
 	
-	
-
 }

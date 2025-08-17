@@ -62,19 +62,19 @@ public class TwoDimCellSpace
     addOutport("outTrans");
     addOutport("outDisplay");
 
-    addTestInput("inN", new Pair(xcoord, ycoord + 1));
+    addTestInput("inN", new Pair(new Integer(xcoord), new Integer(ycoord + 1)));
     addTestInput("inNE",
-                 new Pair(xcoord + 1, ycoord + 1));
-    addTestInput("inE", new Pair(xcoord + 1, ycoord));
+                 new Pair(new Integer(xcoord + 1), new Integer(ycoord + 1)));
+    addTestInput("inE", new Pair(new Integer(xcoord + 1), new Integer(ycoord)));
     addTestInput("inSE",
-                 new Pair(xcoord + 1, ycoord - 1));
-    addTestInput("inS", new Pair(xcoord, ycoord - 1));
+                 new Pair(new Integer(xcoord + 1), new Integer(ycoord - 1)));
+    addTestInput("inS", new Pair(new Integer(xcoord), new Integer(ycoord - 1)));
     addTestInput("inSW",
-                 new Pair(xcoord - 1, ycoord - 1));
+                 new Pair(new Integer(xcoord - 1), new Integer(ycoord - 1)));
     addTestInput("inW",
-                 new Pair(xcoord - 1, ycoord - 1));
+                 new Pair(new Integer(xcoord - 1), new Integer(ycoord - 1)));
     addTestInput("inNW",
-                 new Pair(xcoord - 1,ycoord + 1));
+                 new Pair(new Integer(xcoord - 1), new Integer(ycoord + 1)));
 
   }
 
@@ -101,7 +101,7 @@ public class TwoDimCellSpace
   }
 
   public Cell withId(int xcoord, int ycoord) {
-    return withId(new Pair(xcoord, ycoord));
+    return withId(new Pair(new Integer(xcoord), new Integer(ycoord)));
   }
   
   public TwoDimCell getCell(int xcoord, int ycoord) {
