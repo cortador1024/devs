@@ -4,7 +4,7 @@
  */
 package Component.Devs.lib;
 
-import Component.Devs.port.Value;
+import Component.Devs.lib.port.Value;
 import GenCol.entity;
 import java.io.BufferedWriter;
 import java.lang.System.Logger.Level;
