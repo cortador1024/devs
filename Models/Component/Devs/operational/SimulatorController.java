@@ -4,11 +4,6 @@
  */
 package Component.Devs.operational;
 
-import Component.Devs.operational.TransformatorController;
-import Component.Devs.operational.GeneratorController;
-import Component.Devs.operational.TransformatorController1;
-import Component.Devs.operational.TransformatorController2;
-import Component.Devs.operational.TransformatorController3;
 import Component.Devs.registrator.RegistratorController;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -23,11 +18,12 @@ import view.modeling.ViewableDigraph;
 public class SimulatorController extends ViewableDigraph{
 
   private final GeneratorController cs0;
+  
   private final TransformatorController cs1;
+  
   private final TransformatorController cs2;
+  
   private final TransformatorController cs3;
-  private BufferedWriter output;
-
 
   public SimulatorController () {
     super ( "SimulatorController" );
