@@ -6,6 +6,7 @@ package Component.Devs.registrator;
 
 import Component.Devs.lib.DefaultViewableAtomic;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.nio.file.Files;
@@ -43,8 +44,9 @@ public class RegistratorController extends DefaultViewableAtomic {
   public void initialize() {
     output = null;
     time = 0;
+    Path path = Paths. get ( "/var/log/devs/access.log" );
     try {
-      Path path = Paths. get ( "/var/log/devs/access.log" );
+      
       if ( ! Files. exists ( path ) ) {
         Files. createDirectories ( path. getParent () );
       }
@@ -52,8 +54,8 @@ public class RegistratorController extends DefaultViewableAtomic {
       current = Calendar. getInstance (). getTime ();
       write ( "---- Session %s -----\n", df. format ( current ) );
       
-    } catch ( Exception ex ) {
-      
+    } catch ( IOException ex ) {
+      log. log ( Level.WARNING, String. format ( "Couldn't open the %s file for appending data", String. valueOf ( path ) ), ex. getMessage () );
     }
   }
 
@@ -62,15 +64,13 @@ public class RegistratorController extends DefaultViewableAtomic {
     return getSigma ();
   }
 
+  @Override
   public void deltext(double e, message x) {
     super. deltext ( e, x ); 
     Continue ( e );
-    try {
-      time += e;
-      write ( "%s;%s;received\n", time, toString ( receive ( x ) ) );
-    } catch ( Exception ex ){
-     
-    }
+    time += e;
+    current = Calendar. getInstance (). getTime ();
+    write ( "%s;received;%s\n", time, df. format ( current ), toString ( receive ( x ) ) );
   }
 
   
@@ -78,7 +78,7 @@ public class RegistratorController extends DefaultViewableAtomic {
     try {
       output. append ( String. format ( format, val ) );
       output. flush ();
-    } catch ( Exception ex ) {
+    } catch ( IOException ex ) {
       log. log ( Level.WARNING, String. format ( format, val ), ex. getMessage () );
     }
   }
