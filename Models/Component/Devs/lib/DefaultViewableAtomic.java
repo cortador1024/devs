@@ -4,6 +4,7 @@
  */
 package Component.Devs.lib;
 
+import Component.Devs.control.LineController;
 import Component.Devs.lib.port.Value;
 import GenCol.entity;
 import java.io.BufferedWriter;
@@ -22,6 +23,14 @@ public class DefaultViewableAtomic extends ViewableAtomic {
  
   public DefaultViewableAtomic ( String name ) {
     super ( name );
+  }
+  
+  protected void holdIn ( Object o, double d ) {
+    super. holdIn ( String. valueOf ( o ), d );
+  }
+
+  protected boolean phaseIs ( Object o ) {
+    return super. phaseIs ( String. valueOf ( o ) );
   }
   
   protected String toString ( Object o ) {

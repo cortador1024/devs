@@ -18,8 +18,7 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   private double outputTension;
 
   private double nominalTension;
-  private BufferedWriter output;
-      
+  
   public ElectricGenerator ( String n, double t ) {
     super ( String. format ( "EG.%s", n ) );
     addOutport ( "out" );
@@ -45,20 +44,21 @@ public class ElectricGenerator extends DefaultViewableAtomic {
     super. deltext ( e, x );
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    Object [] inState = ( inState = ( Object [] ) map. get ( "state" ) ) != null ? inState : ( Object [] ) null;
-    if ( inState != null ) {
-      String cause = ( String ) inState [ 0 ];
-      level = ( double ) inState [ 1 ];
-      switch ( cause ) {
-        case "fail": {
-          outputTension = nominalTension * ( double ) level;
-          state = "failure";
-        } break;
-        case "restore": {
-          outputTension = nominalTension;
-          state = "working";
-        } break;
-      }
+    Object [] in = ( in = ( Object [] ) map. get ( "state" ) ) != null ? in : ( Object [] ) null;
+    if ( in == null ) {
+      return ;
+    }
+    String cause = ( String ) in [ 0 ];
+    level = ( double ) in [ 1 ];
+    switch ( cause ) {
+      case "fail": {
+        outputTension = nominalTension * ( double ) level;
+        state = "failure";
+      } break;
+      case "restore": {
+        outputTension = nominalTension;
+        state = "working";
+      } break;
     }
   }
   

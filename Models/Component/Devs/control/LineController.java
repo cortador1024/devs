@@ -9,8 +9,9 @@ import java.util.HashMap;
 
 import model.modeling.message;
 
-public class LineController extends DefaultViewableAtomic 	{
+public class LineController extends DefaultViewableAtomic {
 
+  
   public enum LinePhase {
     
     WAIT ( "wait" ),
@@ -35,18 +36,20 @@ public class LineController extends DefaultViewableAtomic 	{
   
   private ArrayList < Integer > yl1 = new ArrayList <> ();
   
+  private static final String RESPONSE = "response";
+  
+  private static final String REQUEST = "request";
+  
 	public LineController ( String name ) {
 		super ( String. format ( "LineController %s", name ) );
-		addInport ( "stateIn0" );
-		addInport ( "stateIn1" );
-		addInport ( "stateIn2" );
-		addOutport ( "stateOut" );
+		addInport ( REQUEST );
+		addOutport ( RESPONSE );
 	}
 	
 	@Override
   public void initialize() {
 	  
-	  holdIn ( String. valueOf ( LinePhase.WAIT ), INFINITY );
+	  holdIn ( WAIT, INFINITY );
 	  clear ( yl0 );
     clear ( array );
   }
@@ -130,29 +133,29 @@ public class LineController extends DefaultViewableAtomic 	{
       array [ 2 ] = val;
     }
     if ( ! isReady ( array ) ) {
-      holdIn ( WAIT. name, INFINITY );
+      holdIn ( WAIT, INFINITY );
       return;
     }
     yl0 [ 0 ] = yg ( ( Object [] ) array [ 0 ] );
     for ( int i = 1, top = array. length; i < top; i ++ ) {
       yl0 [ i ] = yf ( ( Object [] ) array [ 0 ], ( Object [] ) array [ i ] );
     }
-    holdIn ( STREAM. name, 0 );
+    holdIn ( STREAM, 0 );
   }
   
   @Override
   public void deltint() {
     clear ( array );
     clear ( yl0 );
-    holdIn ( WAIT. name, INFINITY );
+    holdIn ( WAIT, INFINITY );
   }
   
   @Override
   public message out () {
-    if ( ! phaseIs ( STREAM. name ) ) {
+    if ( ! phaseIs ( STREAM ) ) {
       return super. out ();
     }
-    return send ( "stateOut", new Object [] { getName (), yl0 }  );
+    return send ( RESPONSE, new Object [] { getName (), yl0 }  );
   }
 	
 }

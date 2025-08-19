@@ -30,6 +30,13 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   
   private final static String STATE = "state";
   
+  private final int SOURCE_FIELD = 0;
+  
+  private final int STATE_FIELD = 1;
+  
+  private final int VALUE_FIELD = 2;
+
+  
   public RestoreGenerator ( String n ) {
     super ( String. format ( "RG.%s", n ) );
     addInport ( STATE );
@@ -46,14 +53,17 @@ public class RestoreGenerator extends DefaultViewableAtomic{
     super. deltext ( e, x );
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    Object [] inState = ( inState = ( Object [] ) map. get ( "state" ) ) != null ? inState : ( Object [] ) null;
-    if ( inState != null ) {
-      String cause = ( String ) inState [ 0 ];
-      switch ( cause ) {
-        case "fail": {
-          holdIn ( "working", normal. get () ) ;
-        } break;
-      }
+    Object [] in = ( in = ( Object [] ) map. get ( "state" ) ) != null ? in : ( Object [] ) null;
+    if ( in == null ) {
+      return;
+    }
+    String source = ( String ) in [ SOURCE_FIELD ];
+    String cause = ( String ) in [ STATE_FIELD ];
+    double value = ( double ) in [ VALUE_FIELD ];
+    switch ( cause ) {
+      case "fail": {
+        holdIn ( "working", normal. get () ) ;
+      } break;
     }
   }
   
@@ -66,9 +76,7 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   @Override
   public message out() {
     return send ( RESPONSE, new Object [] { 
-      getName (), 
-      "restore", 
-      1d 
+      getName (), "restore", 1d 
     } );
   }
   
