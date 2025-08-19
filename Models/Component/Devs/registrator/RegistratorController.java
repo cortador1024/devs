@@ -7,6 +7,7 @@ package Component.Devs.registrator;
 import Component.Devs.lib.DefaultViewableAtomic;
 import java.io.BufferedWriter;
 import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -78,6 +79,7 @@ public class RegistratorController extends DefaultViewableAtomic {
       output. append ( String. format ( format, val ) );
       output. flush ();
     } catch ( Exception ex ) {
+      log. log ( Level.WARNING, String. format ( format, val ), ex. getMessage () );
     }
   }
 
