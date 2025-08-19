@@ -20,15 +20,15 @@ public class FailureGenerator extends DefaultViewableAtomic {
   
   private String state;
   
-  private final static String DEFAULT_OUT = "response";
+  private final static String RESPONSE_PORT = "response";
   
-  private final static String DEFAULT_IN = "state";
+  private final static String STATE_PORT = "state";
   private BufferedWriter output;
   
   public FailureGenerator ( String n ) {
     super ( String. format ( "FG.%s", n ) );
-    addInport ( DEFAULT_IN );
-    addOutport ( DEFAULT_OUT );
+    addInport ( STATE_PORT );
+    addOutport ( RESPONSE_PORT );
     holdIn ( "working", weibull. inverse ( Math. random () ) * 1440 ) ;     
   }
   
@@ -61,8 +61,8 @@ public class FailureGenerator extends DefaultViewableAtomic {
   
   @Override
   public message out() {
-    Object [] out = new Object [] { getName (),"fail", 0d };
-    return send ( DEFAULT_OUT, out );
+    Object [] out = new Object [] { getName (), "fail", 0d };
+    return send ( RESPONSE_PORT, out );
   }
   
   @Override

@@ -26,14 +26,14 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   
   private String state;
   
-  private final static String DEFAULT_OUT = "response";
+  private final static String RESPONSE = "response";
   
-  private final static String DEFAULT_IN = "state";
+  private final static String STATE = "state";
   
   public RestoreGenerator ( String n ) {
     super ( String. format ( "RG.%s", n ) );
-    addInport ( DEFAULT_IN );
-    addOutport ( DEFAULT_OUT );
+    addInport ( STATE );
+    addOutport ( RESPONSE );
   }
   
   @Override
@@ -65,8 +65,11 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   
   @Override
   public message out() {
-    Object [] out = new Object [] { getName (), "restore", 1d };
-    return send ( DEFAULT_OUT, out );
+    return send ( RESPONSE, new Object [] { 
+      getName (), 
+      "restore", 
+      1d 
+    } );
   }
   
   @Override

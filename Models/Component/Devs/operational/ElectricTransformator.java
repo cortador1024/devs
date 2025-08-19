@@ -74,8 +74,7 @@ public class ElectricTransformator extends DefaultViewableAtomic {
   @Override
   public message out() {
     Object out = f ( tension, getSigma () );
-    Object p = getPhase ();
-    return send ( "out", new Object [] { getName (), out }, "response", p );
+    return send ( "out", out, "response", new Object [] { getName (), getPhase (), out } );
   }
   
   @Override

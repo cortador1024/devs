@@ -113,8 +113,9 @@ public class SensorController extends DefaultViewableAtomic	{
 	    return super. out ();
 	  }
 	  zl1 = zg ( zl0 );
-    Object [] out = new Object [] { getName (), zf ( zl1, NOMINAL_TENSION ), zl1 };
-    return send ( "state", out );
+    return send ( "state", new Object [] { 
+      getName (), zf ( zl1, NOMINAL_TENSION ), zl1 
+    } );
 	}
   
 	@Override

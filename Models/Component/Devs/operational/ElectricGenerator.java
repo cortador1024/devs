@@ -69,9 +69,12 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   
   @Override
   public message out() {
-    String p = getPhase ();
-    Object out = f ( getSigma () );
-    return send ( "out", out, "response", new Object [] { getName (), p } );
+    return send ( 
+      "out", f ( getSigma () ), 
+      "response", new Object [] { 
+        getName (), getPhase () 
+      } 
+    );
   }
   
   @Override
