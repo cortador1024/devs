@@ -33,11 +33,11 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 	 * Default constructor
 	 */
 	public TwoDimCell() {
-		this(new Pair(new Integer(0), new Integer(0)));
+		this(new Pair(Integer.valueOf(0), Integer.valueOf(0)));
 	}
 
 	public TwoDimCell(int xcoord, int ycoord) {
-		this(new Pair(new Integer(xcoord), new Integer(ycoord)));
+		this(new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord)));
 	}
 
 	/**
@@ -52,7 +52,7 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 		int ycoord = y.intValue();
 		// super("Cell_"+ xcoord + "_"+ ycoord);
 
-		// id = new Pair(new Integer(xcoord), new Integer(ycoord));
+		// id = new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord));
 		this.xcoord = xcoord;
 		this.ycoord = ycoord;
 		coupled = false;
@@ -79,14 +79,14 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 		// Add test ports
 
 		addTestInput("start", new entity(""));
-		addTestInput("inN", new Pair(new Integer(xcoord), new Integer(ycoord + 1)));
-		addTestInput("inNE", new Pair(new Integer(xcoord + 1), new Integer(ycoord + 1)));
-		addTestInput("inE", new Pair(new Integer(xcoord + 1), new Integer(ycoord)));
-		addTestInput("inSE", new Pair(new Integer(xcoord + 1), new Integer(ycoord - 1)));
-		addTestInput("inS", new Pair(new Integer(xcoord), new Integer(ycoord - 1)));
-		addTestInput("inSW", new Pair(new Integer(xcoord - 1), new Integer(ycoord - 1)));
-		addTestInput("inW", new Pair(new Integer(xcoord - 1), new Integer(ycoord - 1)));
-		addTestInput("inNW", new Pair(new Integer(xcoord - 1), new Integer(ycoord + 1)));
+		addTestInput("inN", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord + 1)));
+		addTestInput("inNE", new Pair(Integer.valueOf(xcoord + 1), Integer.valueOf(ycoord + 1)));
+		addTestInput("inE", new Pair(Integer.valueOf(xcoord + 1), Integer.valueOf(ycoord)));
+		addTestInput("inSE", new Pair(Integer.valueOf(xcoord + 1), Integer.valueOf(ycoord - 1)));
+		addTestInput("inS", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord - 1)));
+		addTestInput("inSW", new Pair(Integer.valueOf(xcoord - 1), Integer.valueOf(ycoord - 1)));
+		addTestInput("inW", new Pair(Integer.valueOf(xcoord - 1), Integer.valueOf(ycoord - 1)));
+		addTestInput("inNW", new Pair(Integer.valueOf(xcoord - 1), Integer.valueOf(ycoord + 1)));
 
 	}
 
@@ -140,7 +140,7 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 
 	public message out() {
 		message m = new message();
-		m.add(makeContent("outCoord", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent("outCoord", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 		return m;
 	}
 
@@ -184,7 +184,7 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 	 * @return id
 	 */
 	public Pair getId() {
-		return new Pair(new Integer(xcoord), new Integer(ycoord));
+		return new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord));
 	}
 
 	/**
@@ -233,7 +233,7 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 	public Pair neighborId(int i, int j) {
 		int xc = xcoord + i;
 		int yc = ycoord + j;
-		return new Pair(new Integer(xc), new Integer(yc));
+		return new Pair(Integer.valueOf(xc), Integer.valueOf(yc));
 	}
 
 	public boolean isNorthNeighbor(int i, int j) {
@@ -308,24 +308,24 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 
 	public message propagate(message m, String pn) {
 
-		m.add(makeContent(pn + "outN", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outN", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		// m.add(makeContent(pn+""outNE",new Pair(new Integer(xcoord), new
+		// m.add(makeContent(pn+""outNE",new Pair(Integer.valueOf(xcoord), new
 		// Integer(ycoord))));
 
-		m.add(makeContent(pn + "outE", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outE", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		// m.add(makeContent(pn+"outSE",new Pair(new Integer(xcoord), new
+		// m.add(makeContent(pn+"outSE",new Pair(Integer.valueOf(xcoord), new
 		// Integer(ycoord))));
 
-		m.add(makeContent(pn + "outS", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outS", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		// m.add(makeContent(pn+"outSW",new Pair(new Integer(xcoord), new
+		// m.add(makeContent(pn+"outSW",new Pair(Integer.valueOf(xcoord), new
 		// Integer(ycoord))));
 
-		m.add(makeContent(pn + "outW", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outW", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		// m.add(makeContent(pn+"outNW",new Pair(new Integer(xcoord), new
+		// m.add(makeContent(pn+"outNW",new Pair(Integer.valueOf(xcoord), new
 		// Integer(ycoord))));
 
 		return m;
@@ -339,21 +339,21 @@ public abstract class TwoDimCell extends ViewableAtomic implements Cell {
 
 	public message propagateMealy(message m, String pn) {
 
-		m.add(makeContent(pn + "outN", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outN", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		m.add(makeContent(pn + "outNE", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outNE", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		m.add(makeContent(pn + "outE", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outE", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		m.add(makeContent(pn + "outSE", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outSE", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		m.add(makeContent(pn + "outS", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outS", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		m.add(makeContent(pn + "outSW", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outSW", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		m.add(makeContent(pn + "outW", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outW", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
-		m.add(makeContent(pn + "outNW", new Pair(new Integer(xcoord), new Integer(ycoord))));
+		m.add(makeContent(pn + "outNW", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord))));
 
 		return m;
 	}

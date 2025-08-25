@@ -5,6 +5,7 @@
 package Component.Devs.registrator;
 
 import Component.Devs.lib.DefaultViewableAtomic;
+import Component.Devs.lib.TextUtils;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -35,8 +36,8 @@ public class RegistratorController extends DefaultViewableAtomic {
   
   private Date current;
   
-  public RegistratorController() {
-    super ( "RegistratorController");
+  public RegistratorController( String n ) {
+    super ( n );
     addInport ( "in" );
   }
 
@@ -70,7 +71,7 @@ public class RegistratorController extends DefaultViewableAtomic {
     Continue ( e );
     time += e;
     current = Calendar. getInstance (). getTime ();
-    write ( "%s;received;%s\n", time, df. format ( current ), toString ( receive ( x ) ) );
+    write ( "%s;received;%s;%s\n", time, df. format ( current ), TextUtils. toString ( receive ( x ) ) );
   }
 
   

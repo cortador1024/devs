@@ -5,8 +5,8 @@
 package Component.Devs.operational.fail;
 
 import Component.Devs.lib.DefaultViewableAtomic;
+import Component.Devs.lib.port.Content;
 import RandomNumbers.NormalDistribution;
-import java.io.BufferedWriter;
 import java.util.HashMap;
 import model.modeling.message;
 
@@ -22,23 +22,12 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   
   private final NormalDistribution normal = new NormalDistribution ( MEAN, DESVIATION, 1 );
   
-  private double rate = 1;
-  
-  private String state;
-  
   private final static String RESPONSE = "response";
   
   private final static String STATE = "state";
   
-  private final int SOURCE_FIELD = 0;
-  
-  private final int STATE_FIELD = 1;
-  
-  private final int VALUE_FIELD = 2;
-
-  
   public RestoreGenerator ( String n ) {
-    super ( String. format ( "RG.%s", n ) );
+    super ( n );
     addInport ( STATE );
     addOutport ( RESPONSE );
   }
@@ -53,31 +42,24 @@ public class RestoreGenerator extends DefaultViewableAtomic{
     super. deltext ( e, x );
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    Object [] in = ( in = ( Object [] ) map. get ( "state" ) ) != null ? in : ( Object [] ) null;
-    if ( in == null ) {
-      return;
-    }
-    String source = ( String ) in [ SOURCE_FIELD ];
-    String cause = ( String ) in [ STATE_FIELD ];
-    double value = ( double ) in [ VALUE_FIELD ];
-    switch ( cause ) {
-      case "fail": {
-        holdIn ( "working", normal. get () ) ;
-      } break;
-    }
+    over ( map. get ( STATE ) ).each ( ( Object o ) -> {
+      Content in = ( Content ) o;
+      switch ( in. state ) {
+        case "fail": {
+          holdIn ( "working", 3 /* normal. get () */ ) ;
+        } break;
+      }
+    } );
   }
   
   @Override
-  public void deltint() {
-    super. deltint ();
+  public void deltint () {
     holdIn ( "wait", INFINITY );
   }
   
   @Override
-  public message out() {
-    return send ( RESPONSE, new Object [] { 
-      getName (), "restore", 1d 
-    } );
+  public message out () {
+    return send ( RESPONSE, new Content ( "restore", 1d ) );
   }
   
   @Override

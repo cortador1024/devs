@@ -58,7 +58,7 @@ public synchronized MessageInterface  getOutputForTimeView(){return outputForTim
 public synchronized MessageInterface  getInputForTimeView(){return inputForTimeView;}
 
 public Double nextTNDouble(){
-return new Double(nextTN());
+return Double. valueOf(nextTN());
 }
 
 public synchronized void showModelState(){

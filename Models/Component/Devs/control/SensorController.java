@@ -2,7 +2,13 @@ package Component.Devs.control;
 
 import static Component.Devs.control.SensorController.SensorPhase.STREAM;
 import static Component.Devs.control.SensorController.SensorPhase.WAIT;
+import static Component.Devs.control.SensorController.SensorState.HIGH_TENSION;
+import static Component.Devs.control.SensorController.SensorState.INTERRUPTION;
+import static Component.Devs.control.SensorController.SensorState.LOW_TENSION;
+import static Component.Devs.control.SensorController.SensorState.NORMAL;
 import Component.Devs.lib.DefaultViewableAtomic;
+import Component.Devs.lib.TextUtils;
+import Component.Devs.lib.port.LogStruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +16,11 @@ import model.modeling.message;
 
 public class SensorController extends DefaultViewableAtomic	{
 
-  private double variable;
+  private final String IN = "tension";
+  
+  private final String OUT = "ostate";
+  
+  private final String LOG = "log";
   
   public enum SensorPhase {
     
@@ -59,20 +69,23 @@ public class SensorController extends DefaultViewableAtomic	{
   
   private final double NOMINAL_TENSION;
   
+  private double variable;
+  
   private ArrayList < Double > zl0 = new ArrayList <> ();
   
   private double zl1 = 0;
 
 	public SensorController ( String name, double nt ) {
-		super ( String. format ( "Sensor %s %s", name, nt ) );
+		super ( name + "(" + nt + ")" );
 		NOMINAL_TENSION = nt;
-		addInport ( "tension" );
-		addOutport ( "state" );
+		addInport ( IN );
+		addOutport ( OUT );
+    addOutport ( LOG );
 	}
 
 	@Override
-  public void initialize() {
-	  holdIn ( String. valueOf ( SensorPhase.WAIT ), INFINITY );
+  public void initialize () {
+	  holdIn ( WAIT, INFINITY );
   }
 	
   @Override
@@ -84,43 +97,36 @@ public class SensorController extends DefaultViewableAtomic	{
 	public void deltext ( double e, message x ) {
 	  Continue ( e );
     HashMap < String, Object > msg = receive ( x );
-    Object val = null;
-    val = msg. get ( "tension" );
-    if ( val == null ) {
-      return;
-    }
-    zl0. add ( ( double ) val );
-    if ( zl0. size () > SENSOR_MIN_READ_COUNT ) {
-      holdIn ( String. valueOf ( SensorPhase.STREAM ), 1 );
-      zl0. remove ( 0 );
+    over ( msg. get ( "tension" ) ).each ( ( Object val ) -> {
+      zl0. add ( ( double ) val );
+    } );
+    holdIn ( WAIT, INFINITY );
+    if ( zl0. size () < SENSOR_MIN_READ_COUNT ) {
       return;
     } 
-    holdIn ( String. valueOf ( SensorPhase.WAIT ), INFINITY );
+    zl0. remove ( 0 );
+    holdIn ( STREAM, 1 );
 	}
 	
 	@Override
 	public void deltint () {
-    if ( ! phaseIs ( STREAM. name ) ) {
-      return;
+    if ( phaseIs ( STREAM ) ) {
+      zl0. clear ();  
     }
-    holdIn ( WAIT. name, INFINITY );
-    zl0. clear ();  
+    holdIn ( WAIT, INFINITY );
 	}
 	
 	@Override
 	public message out () {
-	  if ( ! phaseIs ( STREAM. name ) ) {
-	    return super. out ();
-	  }
 	  zl1 = zg ( zl0 );
-    return send ( "state", new Object [] { 
-      getName (), zf ( zl1, NOMINAL_TENSION ), zl1 
-    } );
+    return send (OUT, new Object [] { zf ( zl1, NOMINAL_TENSION ), zl1 }, 
+      LOG, new LogStruct ( tag (), getPhase (), "active", new Object [] { zl0, zl1 } ) 
+    );
 	}
   
 	@Override
 	public String getTooltipText() {
-	  return toString ( zl0 );
+	  return TextUtils. toString ( zl0 );
 	}
 	
 	private double zg ( ArrayList l ) {
@@ -138,11 +144,15 @@ public class SensorController extends DefaultViewableAtomic	{
 	}
 	
 	private SensorState zf ( double x, double v ) {
-	  SensorState r = SensorState.NORMAL;
-	  r = ( Math. abs ( x ) <= 0.1 * v ) ? SensorState.INTERRUPTION :
-	    ( Math. abs ( x ) <= 0.8 * v ) ? SensorState.LOW_TENSION :
-	    ( Math. abs ( x ) <= 1.1 * v ) ? SensorState.NORMAL :
-	    SensorState.HIGH_TENSION;
+	  SensorState r = NORMAL;
+	  r = ( Math. abs ( x ) <= 0.1 * v ) ? 
+        INTERRUPTION :
+	    ( Math. abs ( x ) <= 0.8 * v ) ? 
+        LOW_TENSION :
+	    ( Math. abs ( x ) > 1.1 * v ) ? 
+        HIGH_TENSION
+      : r
+    ;
 	  return r;
 	}
 	

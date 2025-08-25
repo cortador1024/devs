@@ -1,8 +1,9 @@
 package Component.Devs.operational;
 
 import Component.Devs.lib.DefaultViewableAtomic;
-import java.io.BufferedWriter;
-import java.util.Collections;
+import Component.Devs.lib.port.Content;
+import Component.Devs.lib.port.LogStruct;
+import Component.Devs.operational.probability.distribution.Weibull;
 import java.util.HashMap;
 
 import model.modeling.message;
@@ -15,19 +16,23 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   
   private double level = 1;
   
-  private double outputTension;
+  private double tension;
 
   private double nominalTension;
   
+  private Weibull weibull = new Weibull ( 21d, 3d, true );
+  
+  private double value;
+  
   public ElectricGenerator ( String n, double t ) {
-    super ( String. format ( "EG.%s", n ) );
-    addOutport ( "out" );
-    addOutport ( "response" );
-    addInport ( "in" );
+    super ( n );
+    addOutport ( "otension" );
+    addOutport ( "log" );
+    addInport ( "tension" );
     addInport ( "state" );
-    outputTension = t;
+    tension = t;
     nominalTension = t;
-    holdIn ( state = "working", 1 ); 
+    holdIn ( "send", weibull. inverse ( Math. random () ) ); 
   } 
   
   @Override
@@ -36,7 +41,7 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   }
   
   private double f ( double e ) {
-    return outputTension ;
+    return tension ;
   }
   
   @Override
@@ -44,37 +49,42 @@ public class ElectricGenerator extends DefaultViewableAtomic {
     super. deltext ( e, x );
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    Object [] in = ( in = ( Object [] ) map. get ( "state" ) ) != null ? in : ( Object [] ) null;
-    if ( in == null ) {
-      return ;
-    }
-    String cause = ( String ) in [ 0 ];
-    level = ( double ) in [ 1 ];
-    switch ( cause ) {
-      case "fail": {
-        outputTension = nominalTension * ( double ) level;
-        state = "failure";
-      } break;
-      case "restore": {
-        outputTension = nominalTension;
-        state = "working";
-      } break;
-    }
+    over ( map. get ( "state" ) ). each ( ( Object v ) -> {
+      Content in = ( Content ) v;
+      level = ( double ) in. value;
+      tension = nominalTension * level;
+      switch ( in. state ) {
+        case "fail": {
+          state = "failure";
+        } break;
+        case "restore": {
+          state = "working";
+        } break;
+      }
+      holdIn ( "change", weibull. inverse ( Math. random () ) );
+    } );
+    over ( map. get ( "tension" ) ). each ( ( Object v ) -> {
+      tension = ( double ) v;
+      holdIn ( "send", 1 );
+    } );
   }
   
   @Override
-  public void deltint() {
-    holdIn ( state, 1 ); 
+  public void deltint () {
+    holdIn ( "send", 1 );
   }
   
   @Override
-  public message out() {
-    return send ( 
-      "out", f ( getSigma () ), 
-      "response", new Object [] { 
-        getName (), getPhase () 
+  public message out () {
+    switch ( getPhase () ) {
+      case "send" : { 
+        return send ( "otension", value = f ( getSigma () ) );
       } 
-    );
+      case "change": {
+        return send ( "log", new LogStruct ( tag (), getPhase (), state, String. format ( "tension:%s", value ) ) ); 
+      }
+    }
+    return send ();
   }
   
   @Override

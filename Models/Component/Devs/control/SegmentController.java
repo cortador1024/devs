@@ -12,11 +12,20 @@ import static Component.Devs.control.SensorController.SensorState.INTERRUPTION;
 import static Component.Devs.control.SensorController.SensorState.LOW_TENSION;
 import static Component.Devs.control.SensorController.SensorState.NORMAL;
 import Component.Devs.lib.DefaultViewableAtomic;
+import Component.Devs.lib.port.LogStruct;
 import java.util.HashMap;
 
 import model.modeling.message;
 
 public class SegmentController extends DefaultViewableAtomic 	{
+
+  private final String IN = "state";
+  private final String REQUEST = "request";
+  private final String OUT = "ostate";
+  private final String RESPONSE = "response";
+  private final String LOG = "log";
+  
+  private int index = 0;
 
   public enum SegmentPhase {
     
@@ -34,7 +43,6 @@ public class SegmentController extends DefaultViewableAtomic 	{
     public String toString() {
       return name;
     }  
-     
   }
   
   public enum SegmentAction {
@@ -66,17 +74,19 @@ public class SegmentController extends DefaultViewableAtomic 	{
   private int xl5 = 0;
   
   
-  public SegmentController(String name ) {
-		super ( String. format ( "SegmentController %s", name ) );
-		addInport ( "stateIn" );
-		addInport ( "request" );
-		addOutport ( "stateOut" );
-		addOutport ( "response" );
+  public SegmentController ( String name, int i ) {
+		super ( name );
+		addInport ( IN );
+		addInport ( REQUEST );
+		addOutport ( OUT );
+    addOutport ( RESPONSE );
+		addOutport ( LOG );
+    index = i;
 	}
 	
 	@Override
   public void initialize() {
-	  holdIn ( WAIT. name, INFINITY );
+	  holdIn ( WAIT, INFINITY );
   }
   
   @Override
@@ -138,8 +148,7 @@ public class SegmentController extends DefaultViewableAtomic 	{
     return null;
   }
   
-  private void onStatus ( Object [] xe ) {
-        
+  private void onInput ( Object [] xe ) {
     SensorState xe0 = ( SensorState ) xe [ 0 ];
     double xe1 = ( double) xe [ 1 ];
     xl0 = xf ( xe0, xl0 );
@@ -151,56 +160,52 @@ public class SegmentController extends DefaultViewableAtomic 	{
       // xl2 = 0;
       xl3 = RESET;
       xl5 = 0;
-      holdIn ( STREAM. name, 0 );
     } else
     if ( xl1 == xe0 && xl5 < 4 ) {
       xl3 = null;
       xl5 ++;
-      holdIn ( STREAM. name, 0 );
     } else
     if ( xl1 != xe0 ) {
       xl3 = null;
-      holdIn ( STREAM. name, 0 );
       xl5 = 0;
     }
   }
   
   private void onRequest ( String request ) {
     xl3 = SegmentAction. valueOf ( request );
-    holdIn ( ACTION. name, 0 );
   }
+  
   
 	@Override
   public void deltext ( double e, message x ) {
 	  Continue ( e );
     HashMap < String, Object > msg = receive ( x );
-    Object [] status = ( Object [] ) msg. get ( "stateIn" );
-    if ( status != null ) {
-      onStatus ( status );
-    }
-    String request = ( String ) msg. get ( "request" );
-    if ( request != null ) {
-      onRequest ( request );
-    }
+    over ( msg. get ( IN ) ).each ( ( Object o ) -> { 
+      onInput ( ( Object [] ) o );
+      holdIn ( STREAM, index );
+    } );
+    over ( msg. get ( REQUEST ) ).each ( ( Object o ) -> {
+      onRequest ( ( String ) o );
+      holdIn ( ACTION, 0 );
+    } );
   }
   
   @Override
   public void deltint() {
-    holdIn ( WAIT. name, INFINITY );
+    holdIn ( WAIT, INFINITY );
   }
   
   @Override
   public message out() {
-    if ( phaseIs ( WAIT. name ) ) {
-      return super. out ();
+    if ( phaseIs ( STREAM ) ) {
+      return send (OUT, new Object [] { xl0, xl2, index }, 
+        LOG, new LogStruct ( tag (), getPhase (), "active", new Object [] { xl0, xl2, index } ) 
+      );
     }
-    String port = phaseIs ( STREAM. name ) ? 
-      "stateOut" :
-      phaseIs ( ACTION. name ) && xl3 == QUERY ?
-        "response" :
-        "";
-    Object [] out = new Object [] { getName (), xl0, xl2 };
-    return send ( port, out );
+    if ( phaseIs ( ACTION ) && xl3 == QUERY ) {
+      return send ( RESPONSE, new Object [] { xl0, xl2 } );
+    }
+    return send ();
   }
   
   

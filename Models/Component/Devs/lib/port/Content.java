@@ -4,22 +4,24 @@
  */
 package Component.Devs.lib.port;
 
-import GenCol.entity;
-
 /**
  *
  * @author sysadmin
  */
-public class Value extends entity {
+public class Content {
+
+  public final String state;
   
-  private final Object value ;
+  public final double value;
   
-  public Value ( Object v ) {
+  public Content ( String s, double v ) {
+    state = s;
     value = v;
   }
   
-  public Object get () {
-    return value;
+  @Override
+  public String toString () {
+    return String. format ( "{ %s, %s }", state, value );
   }
-  
+
 }

@@ -18,19 +18,19 @@ public class CoupledController extends ViewableDigraph	{
 
   public CoupledController() {	
 		super ( "CoupledController" );
-    addOutport ( "out" );
-    add ( rc = new RegistratorController () );
-    add ( sc = new SimulatorController () );
-    add ( cc = new ControlController () );
-    addCoupling ( sc, "tension0", cc, "tensionIn0" );
-    addCoupling ( sc, "tension1", cc, "tensionIn1" );
-    addCoupling ( sc, "tension2", cc, "tensionIn2" );
-    addCoupling ( cc, "networkState", this, "out" );
-    addCoupling ( cc, "response", rc, "in" );
-    addCoupling ( sc, "tension0", rc, "in" );
-    addCoupling ( sc, "tension1", rc, "in" );
-    addCoupling ( sc, "tension2", rc, "in" );
-    addCoupling ( sc, "response", rc, "in" );
+    addOutport ( "state" );
+    add ( rc = new RegistratorController ( "r0" ) );
+    add ( sc = new SimulatorController ( "s0" ) );
+    add ( cc = new ControlController ( "c0" ) );
+    
+    addCoupling ( sc, "tension0", cc, "tension0" );
+    addCoupling ( sc, "tension1", cc, "tension1" );
+    addCoupling ( sc, "tension2", cc, "tension2" );
+    
+    addCoupling ( cc, "state", this, "state" );
+    addCoupling ( sc, "log", rc, "in" );
+    addCoupling ( cc, "log", rc, "in" );
+    
   }
   
   
@@ -43,8 +43,8 @@ public class CoupledController extends ViewableDigraph	{
     public void layoutForSimView()
     {
         preferredSize = new Dimension(2264, 656);
-        ((ViewableComponent)withName("RegistratorController")).setPreferredLocation(new Point(1879, 20));
-        ((ViewableComponent)withName("SimulatorController")).setPreferredLocation(new Point(33, 20));
-        ((ViewableComponent)withName("ControlController")).setPreferredLocation(new Point(973, 20));
+        ((ViewableComponent)withName("s0")).setPreferredLocation(new Point(210, 85));
+        ((ViewableComponent)withName("c0")).setPreferredLocation(new Point(946, 19));
+        ((ViewableComponent)withName("r0")).setPreferredLocation(new Point(50, 50));
     }
 }

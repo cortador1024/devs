@@ -28,14 +28,18 @@ public class GeneratorController extends ViewableDigraph{
   }
   
   public GeneratorController ( String n ) {
-    super ( String. format ( "GeneratorController.%s", n ) );
-    addOutport ( "out" );
+    super ( n );
     
-    add ( e0 = new ElectricGenerator ( String. format ( "%s.eg0", n ), 33d ) );
-    add ( f0 = new FailureGenerator ( String. format ( "%s.fg0", n ) ) );
-    add ( r0 = new RestoreGenerator ( String. format ( "%s.rg0", n ) ) );
+    addOutport ( "otension" );
+    addOutport ( "log" );
     
-    addCoupling ( e0, "out", this, "out" );
+    add ( e0 = new ElectricGenerator ( n + "/g0", 33d ) );
+    add ( f0 = new FailureGenerator ( n + "/f0" ) );
+    add ( r0 = new RestoreGenerator ( n + "/r0" ) );
+    
+    addCoupling ( e0, "otension", this, "otension" );
+    addCoupling ( e0, "log", this, "log" );
+    
     addCoupling ( f0, "response", e0, "state" );
     addCoupling ( f0, "response", r0, "state" );
     addCoupling ( r0, "response", e0, "state" );
@@ -49,9 +53,9 @@ public class GeneratorController extends ViewableDigraph{
     @Override
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(416, 178);
-        ((ViewableComponent)withName("RG.eg0.rg0")).setPreferredLocation(new Point(2, 116));
-        ((ViewableComponent)withName("FG.eg0.fg0")).setPreferredLocation(new Point(2, 19));
-        ((ViewableComponent)withName("EG.eg0.eg0")).setPreferredLocation(new Point(162, 68));
+        preferredSize = new Dimension(396, 179);
+        ((ViewableComponent)withName("RG.g0/r0")).setPreferredLocation(new Point(-14, 123));
+        ((ViewableComponent)withName("g0/g0")).setPreferredLocation(new Point(-121, 58));
+        ((ViewableComponent)withName("FG.g0/f0")).setPreferredLocation(new Point(50, 72));
     }
 }

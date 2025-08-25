@@ -1,7 +1,8 @@
 package Component.Devs.operational;
 
 import Component.Devs.lib.DefaultViewableAtomic;
-import java.io.BufferedWriter;
+import Component.Devs.lib.port.Content;
+import Component.Devs.lib.port.LogStruct;
 import java.util.HashMap;
 import model.modeling.message;
 
@@ -9,25 +10,24 @@ public class ElectricTransformator extends DefaultViewableAtomic {
   
   private final double rate = 0.3333;
   
-  private static int counter = 0;
-  
-  private int advance = 0;
-  
   private double relation;
+
   private double tension;
+
   private String state;
-  private double input;
+
+  private double value;
+
   private double level;
   
   public ElectricTransformator ( String n, double t0, double t1 ) {
     super ( n );
-    addOutport ( "out" );
-    addOutport ( "response" );
-    addInport ( "in" );
-    addInport ( "state" );
-    
+    addOutport ( "otension" );
+    addOutport ( "log" );
+    addInport ( "tension" );
+    addInport ( "request" );
     relation = ( ( Number ) t0 ). doubleValue () / ( ( Number ) t1 ). doubleValue ();
-    holdIn ( state = "working", INFINITY );
+    holdIn ( "wait", INFINITY );
     level = 1;
   }
   
@@ -45,36 +45,41 @@ public class ElectricTransformator extends DefaultViewableAtomic {
     super. deltext ( e, x );
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    Object [] inState = ( inState = ( Object [] ) map. get ( "state" ) ) != null ? inState : ( Object [] ) null;
-    if ( inState != null ) {
-      String cause = ( String ) inState [ 0 ];
-      switch ( cause ) {
+    over ( map. get ( "request" ) ).each ( ( Object v ) -> {
+      Content in = ( Content ) v;
+      level = ( double ) in. value;
+      switch ( in. state ) {
         case "fail": {
-          level = ( double ) inState [ 1 ];
           state = "failure";
         } break;
         case "restore": {
           state = "working";
-          level = 1;
         } break;
       }
-    }
-    Object val = map. get ( "in" );
-    if ( val != null ) {
-      tension = ( double ) val;
-    }
-    holdIn ( state = "working", 1 );
+      holdIn ( "change", 1 );
+    } ); 
+    over ( map. get ( "tension" ) ).each ( ( Object v ) -> { 
+      tension = ( double ) v;
+      holdIn ( "send", 1 );
+    } );
   }
   
   @Override
   public void deltint() {
-    holdIn ( state, 1 );    
+    holdIn ( "send", 1 );
   }
   
   @Override
   public message out() {
-    Object out = f ( tension, getSigma () );
-    return send ( "out", out, "response", new Object [] { getName (), getPhase (), out } );
+    switch ( getPhase () ) {
+      case "send" : { 
+        return send ( "otension", value = f ( tension, getSigma () ) );
+      } 
+      case "change": {
+        return send ( "log", new LogStruct ( tag (), getPhase (), state, String. format ( "tension:%s, relation:%s, level:%s", value, relation, level ) ) ); 
+      }
+    }
+    return send ();
   }
   
   @Override

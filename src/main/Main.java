@@ -20,15 +20,14 @@ public class Main {
    */
   public static void main(String[] args) {
     try {
-      // To Window
-      SimLauncher launcher = new SimLauncher ();
       
-      // To Console
-      /*
-      coordinator c = new coordinator ( new CoupledController () );
-      c. initialize ();
-      c. simulate ( 1000 );
-      */
+      if ( args. length > 0 ) {
+        coordinator c = new coordinator ( new CoupledController () );
+        c. initialize ();
+        c. simulate ( Integer. valueOf ( args [ 0 ] ) );
+        return;
+      }
+      SimLauncher launcher = new SimLauncher ();
     } catch ( Exception ex ) {
       System. out. println ( ex. getMessage () );
     }

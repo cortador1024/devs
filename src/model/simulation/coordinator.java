@@ -240,7 +240,7 @@ public class coordinator extends atomicSimulator implements CoordinatorInterface
 	public void initialize(double time) {
 		System.out.println(myCoupled.getName() + " Initialize !!!!!!!!!!!");
 		Class [] classes  = { Double.class };
-		Object[] args = { new Double(time) };
+		Object[] args = { Double. valueOf(time) };
 		simulators.tellAll("initialize", classes, args);
 		tN = nextTN();
 	}
@@ -258,7 +258,7 @@ public class coordinator extends atomicSimulator implements CoordinatorInterface
 
 	public void computeInputOutput(double time) {
 		Class [] classes  = { Double.class };
-		Object[] args = { new Double(time) };
+		Object[] args = { Double. valueOf(time) };
 		simulators.tellAll("computeInputOutput", classes, args);
 		// send output to the corresponding model based on the coupling
 		// information
@@ -368,7 +368,7 @@ public class coordinator extends atomicSimulator implements CoordinatorInterface
 	public void wrapDeltfunc(double time) {
 		sendDownMessages();
 		Class<?> [] classes  = { Double.class };
-		Object[] args = { new Double(time) };
+		Object[] args = { Double. valueOf(time) };
 		simulators.tellAll("DeltFunc", classes, args);
 		tL = time;
 		/*

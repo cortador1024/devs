@@ -25,20 +25,20 @@ c = C;
 
 public boolean testEmptyNew(){
 description = "new collection must be empty";
-precondition = new Boolean(c.size() == 0);
+precondition = Boolean. valueOf(c.size() == 0);
 return c.isEmpty() == true;
 }
 
 public boolean testSizeNew(){
 description = "new collection must  have 0 size";
-precondition = new Boolean(c.isEmpty());
+precondition = Boolean. valueOf(c.isEmpty());
 return c.size() == 0;
 }
 
 public boolean testSizeAdd(){
 description = "add increases size by 1 if not already in";
 Object e = new Object();
-precondition = new Boolean(!c.contains(e));
+precondition = Boolean. valueOf(!c.contains(e));
 int s = c.size();
 c.add(e);
 return c.size() == s+1;
@@ -47,7 +47,7 @@ return c.size() == s+1;
 public boolean testSizeAddAnother(){
 description = "add increases size by 1 if already in";
 Iterator it = c.iterator();
-precondition = new Boolean(it.hasNext());
+precondition = Boolean. valueOf(it.hasNext());
 Object e = it.hasNext()? it.next():new Object();
 int s = c.size();
 c.add(e);
@@ -73,7 +73,7 @@ return before == after;
 public boolean testSizeRemove(){
 description = "remove decreases size by 1";
 Iterator it = c.iterator();
-precondition = new Boolean(it.hasNext());
+precondition = Boolean. valueOf(it.hasNext());
 Object e = it.hasNext()? it.next():new Object();
 //precondition = new Boolean(c.contains(e));
 //precondition = Boolean.TRUE;
@@ -144,7 +144,7 @@ li = Li;
 }
 public boolean testContainsAddNew(){
 description = "after adding an object to new list,it is contained";
-precondition = new Boolean(li.isEmpty());
+precondition = Boolean. valueOf(li.isEmpty());
 Object e = new Object();
 li.add(0,e);
 return li.contains(e) == true;
@@ -152,14 +152,14 @@ return li.contains(e) == true;
 
 public boolean testGetAdd1(){
 description = "after adding an object at index 1 can get it there";
-precondition = new Boolean(li.size()>=2);
+precondition = Boolean. valueOf(li.size()>=2);
 Object e = new Object();
 li.add(1,e);
 return li.get(1) == e;
 }
 public boolean testGetAdd2(){
 description = "after adding an object at index 2 can get it there";
-precondition = new Boolean(li.size()>=3);
+precondition = Boolean. valueOf(li.size()>=3);
 Object e = new Object();
 li.add(2,e);
 return li.get(2) == e;
@@ -167,7 +167,7 @@ return li.get(2) == e;
 
 public boolean testListIterator(){
 description = "listIterator starts from given index";
-precondition = new Boolean(li.size()>=2);
+precondition = Boolean. valueOf ( li.size()>=2);
 ListIterator lit = li.listIterator(1);
 int i = 1;//0; will fail
 while (lit.hasNext()){
@@ -181,8 +181,8 @@ return true;
 
 public boolean testIndexShift(){
 description = "after adding an object at index 0, right elements are shifted one over";
-precondition = new Boolean(li.size()>0);
-if (precondition.booleanValue()){
+precondition = Boolean. valueOf ( li. size () > 0 );
+if ( precondition. booleanValue () ){
 Object currentAt0 = li.get(0);
 Object e = new Object();
 li.add(0,e);

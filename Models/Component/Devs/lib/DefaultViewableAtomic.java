@@ -4,16 +4,15 @@
  */
 package Component.Devs.lib;
 
-import Component.Devs.control.LineController;
-import Component.Devs.lib.port.Value;
+import Component.Devs.lib.port.InfoStruct;
 import GenCol.entity;
-import java.io.BufferedWriter;
-import java.lang.System.Logger.Level;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.function.Consumer;
+import model.modeling.IODevs;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
+import view.modeling.ViewableDigraph;
 
 /**
  *
@@ -25,6 +24,18 @@ public class DefaultViewableAtomic extends ViewableAtomic {
     super ( name );
   }
   
+  @Override
+  public String getName () {
+    String n = super. getName ();
+    String pn = "";
+    ViewableDigraph p = getMyParent ();
+    while ( p != null ) {
+      pn = pn + "/" + p. getName ();
+      p = p. getMyParent ();
+    }
+    return String. format ( "%s %s", getClass (). getSimpleName(), n );
+  }
+  
   protected void holdIn ( Object o, double d ) {
     super. holdIn ( String. valueOf ( o ), d );
   }
@@ -33,56 +44,10 @@ public class DefaultViewableAtomic extends ViewableAtomic {
     return super. phaseIs ( String. valueOf ( o ) );
   }
   
-  protected String toString ( Object o ) {
-    if ( o instanceof Object [] ) {
-      return toString ( ( Object [] ) o );
-    } 
-    if ( o instanceof List ) {
-      return toString ( ( List ) o );
-    }
-    if ( o instanceof Map ) {
-      return toString ( ( Map ) o );
-    }
-    return String. valueOf ( o );
-  }
-  
-  protected String toString ( Object [] l ) {
-	  StringBuilder sb = new StringBuilder ();
-	  int i = 0; for ( Object li : l ) {
-	    sb. append ( String. format ( "%s%s", toString ( li ), i < l. length - 1 ? ";" : "" ) );
-	    i ++;
-	  }
-	  String s = sb. toString ();
-	  sb. setLength ( 0 );
-	  return s;
-	}
-  
-  protected String toString ( List l ) {
-	  StringBuilder sb = new StringBuilder ();
-	  int i = 0; for ( Object li : l ) {
-	    sb. append ( String. format ( "%s%s", li, i < l. size () -1 ? ";" : "" ) );
-	    i ++;
-	  }
-	  String s = sb. toString ();
-	  sb. setLength ( 0 );
-	  return s;
-	}
-  
-  protected String toString ( Map l ) {
-	  StringBuilder sb = new StringBuilder ();
-	  int i = 0; for ( Object li : l. keySet () ) {
-	    sb. append ( String. format ( "'%s':'%s'%s", li, toString(l.get(li)), i < l. size () -1 ? ";" : "" ) );
-	    i ++;
-	  }
-	  String s = sb. toString ();
-	  sb. setLength ( 0 );
-	  return s;
-	}
-  
   public message send ( Object ... v ) {
     message m = new message ();
     for ( int i = 0, top = v. length; i < top; i += 2 ) {
-      m. add ( makeContent ( ( String ) v [ i ], new Value ( v [ i + 1 ] ) ) );
+      m. add (makeContent (( String ) v [ i ], new InfoStruct ( v [ i + 1 ] ) ) );
     }
     return m;
   }
@@ -96,18 +61,60 @@ public class DefaultViewableAtomic extends ViewableAtomic {
     return r;
   }
   
+  public class IterationBlock {
+    
+    Object [] values;
+    
+    public IterationBlock ( Object o ) {
+      if ( o instanceof Object [] ) {
+        values = ( Object [] ) o;
+        return;
+      }
+      values = new Object [] { o };
+    }
+    
+    public IterationBlock ( Object [] ol ) {
+      values = ol;
+    }
+    
+    public void onException ( Object o ) {
+      
+    }
+    
+    public IterationBlock each ( Consumer < Object > consumer ) {
+      for ( Object oi : values ) try {
+        consumer. accept ( oi );
+      } catch ( Exception ex ) {
+        onException ( oi );
+      }
+      return this;
+    }
+  }
+  
+  protected IterationBlock over ( Object o ) {
+    return new IterationBlock ( o );
+  }
+  
   private Object getValue ( message x, String k ) {
-	  Object r = null;
+    HashSet l = new HashSet ();
     for ( int i = 0, top = x. size (); i < top; i ++ ) {
 	    if ( ! messageOnPort ( x, k, i ) ) {
 	      continue;
 	    }
       entity e = x. getValOnPort ( k, i );
       if ( e != null ) {
-        return ( ( Value ) e ). get ();
+        l. add (( ( InfoStruct ) e ). get () );
       }
 	  }
-	  return r;
+	  return l. toArray ();
 	}
+
+  protected Object ifNull ( Object v, Object df ) {
+    return ( v == null ) ? df : v;
+  }
+  
+  public String tag () {
+    return String. format ( "%s.%s", getClass (). getSimpleName(), getName () );
+  }
   
 }

@@ -4,6 +4,10 @@
  */
 package Component.Devs.operational;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import view.modeling.ViewableComponent;
+
 /**
  *
  * @author sysadmin

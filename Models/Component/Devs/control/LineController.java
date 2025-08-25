@@ -4,6 +4,7 @@ import static Component.Devs.control.LineController.LinePhase.STREAM;
 import static Component.Devs.control.LineController.LinePhase.WAIT;
 import Component.Devs.control.SensorController.SensorState;
 import Component.Devs.lib.DefaultViewableAtomic;
+import Component.Devs.lib.port.LogStruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,14 +37,17 @@ public class LineController extends DefaultViewableAtomic {
   
   private ArrayList < Integer > yl1 = new ArrayList <> ();
   
-  private static final String RESPONSE = "response";
+  private static final String OUT = "ostate";
   
-  private static final String REQUEST = "request";
+  private static final String IN = "state";
+  
+  private static final String LOG = "log";
   
 	public LineController ( String name ) {
-		super ( String. format ( "LineController %s", name ) );
-		addInport ( REQUEST );
-		addOutport ( RESPONSE );
+		super ( name );
+		addInport ( IN );
+		addOutport ( OUT );
+    addOutport ( "log" );
 	}
 	
 	@Override
@@ -119,19 +123,11 @@ public class LineController extends DefaultViewableAtomic {
   public void deltext ( double e, message x ) {
     Continue ( e );
 	  HashMap < String, Object > msg = receive ( x );
-    Object [] val = null;
-    val = ( Object [] ) msg. get ( "stateIn0" );
-    if ( val != null ) {
-      array [ 0 ] = val;
-    }
-    val = ( Object [] ) msg. get ( "stateIn1" );
-    if ( val != null ) {
-      array [ 1 ] = val;
-    }
-    val = ( Object [] ) msg. get ( "stateIn2" );
-    if ( val != null ) {
-      array [ 2 ] = val;
-    }
+    over ( msg. get ( IN ) ).each ( ( Object o ) -> {
+      Object [] val = ( Object [] ) o;
+      int index = ( int ) val [ 2 ];
+      array [ index ] = val;
+    } );
     if ( ! isReady ( array ) ) {
       holdIn ( WAIT, INFINITY );
       return;
@@ -140,7 +136,7 @@ public class LineController extends DefaultViewableAtomic {
     for ( int i = 1, top = array. length; i < top; i ++ ) {
       yl0 [ i ] = yf ( ( Object [] ) array [ 0 ], ( Object [] ) array [ i ] );
     }
-    holdIn ( STREAM, 0 );
+    holdIn ( STREAM, 1 );
   }
   
   @Override
@@ -152,10 +148,7 @@ public class LineController extends DefaultViewableAtomic {
   
   @Override
   public message out () {
-    if ( ! phaseIs ( STREAM ) ) {
-      return super. out ();
-    }
-    return send ( RESPONSE, new Object [] { getName (), yl0 }  );
+    return send ( OUT, yl0, LOG, new LogStruct ( tag (), getPhase (), "active", yl0 )  );
   }
 	
 }

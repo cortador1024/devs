@@ -62,19 +62,19 @@ public class TwoDimCellSpace
     addOutport("outTrans");
     addOutport("outDisplay");
 
-    addTestInput("inN", new Pair(new Integer(xcoord), new Integer(ycoord + 1)));
+    addTestInput("inN", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord + 1)));
     addTestInput("inNE",
-                 new Pair(new Integer(xcoord + 1), new Integer(ycoord + 1)));
-    addTestInput("inE", new Pair(new Integer(xcoord + 1), new Integer(ycoord)));
+                 new Pair(Integer.valueOf(xcoord + 1), Integer.valueOf(ycoord + 1)));
+    addTestInput("inE", new Pair(Integer.valueOf(xcoord + 1), Integer.valueOf(ycoord)));
     addTestInput("inSE",
-                 new Pair(new Integer(xcoord + 1), new Integer(ycoord - 1)));
-    addTestInput("inS", new Pair(new Integer(xcoord), new Integer(ycoord - 1)));
+                 new Pair(Integer.valueOf(xcoord + 1), Integer.valueOf(ycoord - 1)));
+    addTestInput("inS", new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord - 1)));
     addTestInput("inSW",
-                 new Pair(new Integer(xcoord - 1), new Integer(ycoord - 1)));
+                 new Pair(Integer.valueOf(xcoord - 1), Integer.valueOf(ycoord - 1)));
     addTestInput("inW",
-                 new Pair(new Integer(xcoord - 1), new Integer(ycoord - 1)));
+                 new Pair(Integer.valueOf(xcoord - 1), Integer.valueOf(ycoord - 1)));
     addTestInput("inNW",
-                 new Pair(new Integer(xcoord - 1), new Integer(ycoord + 1)));
+                 new Pair(Integer.valueOf(xcoord - 1), Integer.valueOf(ycoord + 1)));
 
   }
 
@@ -101,7 +101,7 @@ public class TwoDimCellSpace
   }
 
   public Cell withId(int xcoord, int ycoord) {
-    return withId(new Pair(new Integer(xcoord), new Integer(ycoord)));
+    return withId(new Pair(Integer.valueOf(xcoord), Integer.valueOf(ycoord)));
   }
   
   public TwoDimCell getCell(int xcoord, int ycoord) {
