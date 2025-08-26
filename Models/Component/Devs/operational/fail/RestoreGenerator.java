@@ -6,7 +6,7 @@ package Component.Devs.operational.fail;
 
 import Component.Devs.lib.DefaultViewableAtomic;
 import Component.Devs.lib.port.Content;
-import RandomNumbers.NormalDistribution;
+import Component.Devs.operational.probability.distribution.Weibull;
 import java.util.HashMap;
 import model.modeling.message;
 
@@ -16,18 +16,18 @@ import model.modeling.message;
  */
 public class RestoreGenerator extends DefaultViewableAtomic{
 
-  private static final double MEAN = 480;
+  private static final double ALPHA = 3.047;
   
-  private static final double DESVIATION = 60;
+  private static final double BETA = 1.180;
   
-  private final NormalDistribution normal = new NormalDistribution ( MEAN, DESVIATION, 1 );
+  private final Weibull weibull = new Weibull ( ALPHA, BETA, true );
   
   private final static String RESPONSE = "response";
   
   private final static String STATE = "state";
   
   public RestoreGenerator ( String n ) {
-    super ( n );
+    super ( String. format ( "RestoreGenerator %s", n ) );
     addInport ( STATE );
     addOutport ( RESPONSE );
   }
@@ -46,7 +46,7 @@ public class RestoreGenerator extends DefaultViewableAtomic{
       Content in = ( Content ) o;
       switch ( in. state ) {
         case "fail": {
-          holdIn ( "working", 3 /* normal. get () */ ) ;
+          holdIn ( "working", 30 ) ;
         } break;
       }
     } );

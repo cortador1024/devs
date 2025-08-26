@@ -8,8 +8,8 @@ import Component.Devs.lib.port.InfoStruct;
 import GenCol.entity;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Consumer;
-import model.modeling.IODevs;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 import view.modeling.ViewableDigraph;
@@ -24,16 +24,15 @@ public class DefaultViewableAtomic extends ViewableAtomic {
     super ( name );
   }
   
-  @Override
-  public String getName () {
+  public String tag () {
     String n = super. getName ();
     String pn = "";
     ViewableDigraph p = getMyParent ();
     while ( p != null ) {
-      pn = pn + "/" + p. getName ();
+      pn = p. getName () + "/" + pn ;
       p = p. getMyParent ();
     }
-    return String. format ( "%s %s", getClass (). getSimpleName(), n );
+    return String. format ( "%s%s", pn, n );
   }
   
   protected void holdIn ( Object o, double d ) {
@@ -47,7 +46,7 @@ public class DefaultViewableAtomic extends ViewableAtomic {
   public message send ( Object ... v ) {
     message m = new message ();
     for ( int i = 0, top = v. length; i < top; i += 2 ) {
-      m. add (makeContent (( String ) v [ i ], new InfoStruct ( v [ i + 1 ] ) ) );
+      m. add ( makeContent ( ( String ) v [ i ], new InfoStruct ( v [ i + 1 ] ) ) );
     }
     return m;
   }
@@ -103,7 +102,7 @@ public class DefaultViewableAtomic extends ViewableAtomic {
 	    }
       entity e = x. getValOnPort ( k, i );
       if ( e != null ) {
-        l. add (( ( InfoStruct ) e ). get () );
+        l. add ( ( ( InfoStruct ) e ). get () );
       }
 	  }
 	  return l. toArray ();
@@ -113,8 +112,20 @@ public class DefaultViewableAtomic extends ViewableAtomic {
     return ( v == null ) ? df : v;
   }
   
-  public String tag () {
-    return String. format ( "%s.%s", getClass (). getSimpleName(), getName () );
+  protected Object [] copy ( Object [] source ) {
+    Object [] r = new Object [ source. length ];
+    for ( int i = 0, top = source. length; i < top; i ++ ) {
+      r [ i ] = source [ i ];
+    }
+    return r;
   }
   
+  protected Object [] copy ( List source ) {
+    Object [] r = new Object [ source. size () ];
+    for ( int i = 0, top = source. size (); i < top; i ++ ) {
+      r [ i ] = source. get ( i );
+    }
+    return r;
+  }
+
 }

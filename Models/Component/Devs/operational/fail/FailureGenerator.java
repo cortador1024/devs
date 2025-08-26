@@ -9,7 +9,7 @@ import model.modeling.message;
 
 public class FailureGenerator extends DefaultViewableAtomic {
   
-  private static final double ALPHA = 46.047;
+  private static final double ALPHA = 10.047;
   
   private static final double BETA = 1.180;
   
@@ -20,14 +20,14 @@ public class FailureGenerator extends DefaultViewableAtomic {
   private final static String STATE = "state";
   
   public FailureGenerator ( String n ) {
-    super ( n );
+    super ( String. format ( "FailureGenerator %s", n ) );
     addInport ( STATE );
     addOutport ( RESPONSE );
   }
   
   @Override
   public void initialize() {
-    holdIn ( "working", 10 /* weibull. inverse ( Math. random () ) * 1440 */ );    
+    holdIn ( "working", 30 );
   }
   
   @Override
@@ -39,7 +39,7 @@ public class FailureGenerator extends DefaultViewableAtomic {
       Content in = ( Content ) o;
       switch ( in. state ) {
         case "restore": {
-          holdIn ( "working", 10 /* weibull. inverse ( Math. random () ) * 1440 */ );
+          holdIn ( "working", 30 );
         } break;
       }
     } );
@@ -52,7 +52,7 @@ public class FailureGenerator extends DefaultViewableAtomic {
   
   @Override
   public message out () {
-    return send ( RESPONSE, new Content ( "fail", 0d ) );
+    return send ( RESPONSE, new Content ( "fail", 0 ) );
   }
   
   @Override

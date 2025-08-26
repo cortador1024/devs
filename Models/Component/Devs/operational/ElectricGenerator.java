@@ -25,23 +25,22 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   private double value;
   
   public ElectricGenerator ( String n, double t ) {
-    super ( n );
+    super ( String. format ( "ElectricGenerator %s(%s)", n, t ) );
     addOutport ( "otension" );
     addOutport ( "log" );
     addInport ( "tension" );
     addInport ( "state" );
     tension = t;
     nominalTension = t;
-    holdIn ( "send", weibull. inverse ( Math. random () ) ); 
   } 
   
   @Override
   public void initialize() {
-    
+    holdIn ( "send", 1 ); 
   }
   
   private double f ( double e ) {
-    return tension ;
+    return tension * level;
   }
   
   @Override
@@ -61,7 +60,7 @@ public class ElectricGenerator extends DefaultViewableAtomic {
           state = "working";
         } break;
       }
-      holdIn ( "change", weibull. inverse ( Math. random () ) );
+      holdIn ( "change", 1 );
     } );
     over ( map. get ( "tension" ) ). each ( ( Object v ) -> {
       tension = ( double ) v;

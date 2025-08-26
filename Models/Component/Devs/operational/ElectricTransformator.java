@@ -21,7 +21,7 @@ public class ElectricTransformator extends DefaultViewableAtomic {
   private double level;
   
   public ElectricTransformator ( String n, double t0, double t1 ) {
-    super ( n );
+    super ( String. format ( "ElectricTransformator %s(%s/%s)", n, t0, t1 ) );
     addOutport ( "otension" );
     addOutport ( "log" );
     addInport ( "tension" );

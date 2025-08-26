@@ -29,7 +29,7 @@ public class TransformatorController extends ViewableDigraph{
   }
   
   public TransformatorController( String n, double t0, double t1 ) {
-    super ( n );
+    super ( String. format ( "TransformatorController %s", n ) );
     addInport ( "tension" );
     addOutport ( "otension" );
     addOutport ( "log" );
@@ -43,9 +43,9 @@ public class TransformatorController extends ViewableDigraph{
     
     addCoupling ( e0, "log", this, "log" );
     
-    addCoupling ( f0, "response", e0, "state" );
+   //addCoupling ( f0, "response", e0, "state" );
     addCoupling ( f0, "response", r0, "state" );
-    addCoupling ( r0, "response", e0, "state" );
+  //  addCoupling ( r0, "response", e0, "state" );
     addCoupling ( r0, "response", f0, "state" );
     
   }

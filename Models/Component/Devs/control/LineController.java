@@ -44,7 +44,7 @@ public class LineController extends DefaultViewableAtomic {
   private static final String LOG = "log";
   
 	public LineController ( String name ) {
-		super ( name );
+		super ( String. format ( "LineController %s", name ) );
 		addInport ( IN );
 		addOutport ( OUT );
     addOutport ( "log" );
@@ -78,7 +78,7 @@ public class LineController extends DefaultViewableAtomic {
 	public Object [] yg ( Object [] x ) {
     Object r = yh ( ( SensorState ) x [ 0 ] );
 	  return r != null ? 
-      new Object [] { r, x [ 1 ] } :
+      new Object [] { SensorState.fromInt((int)r), x [ 1 ] } :
       null
     ;
 	}
@@ -141,14 +141,16 @@ public class LineController extends DefaultViewableAtomic {
   
   @Override
   public void deltint() {
-    clear ( array );
-    clear ( yl0 );
+    if ( phaseIs ( STREAM ) ) {
+      clear ( array );
+      clear ( yl0 );
+    }
     holdIn ( WAIT, INFINITY );
   }
   
   @Override
   public message out () {
-    return send ( OUT, yl0, LOG, new LogStruct ( tag (), getPhase (), "active", yl0 )  );
+    return send ( OUT, yl0, LOG, new LogStruct ( tag (), getPhase (), "active", copy ( yl0 ) )  );
   }
 	
 }

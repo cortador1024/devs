@@ -6,6 +6,7 @@ package Component.Devs.registrator;
 
 import Component.Devs.lib.DefaultViewableAtomic;
 import Component.Devs.lib.TextUtils;
+import GenCol.entity;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -37,7 +38,7 @@ public class RegistratorController extends DefaultViewableAtomic {
   private Date current;
   
   public RegistratorController( String n ) {
-    super ( n );
+    super ( String. format ( "RegistratorController %s", n ) );
     addInport ( "in" );
   }
 
@@ -66,12 +67,31 @@ public class RegistratorController extends DefaultViewableAtomic {
   }
 
   @Override
-  public void deltext(double e, message x) {
+  public void deltext ( double e, message x ) {
     super. deltext ( e, x ); 
     Continue ( e );
     time += e;
     current = Calendar. getInstance (). getTime ();
-    write ( "%s;received;%s;%s\n", time, df. format ( current ), TextUtils. toString ( receive ( x ) ) );
+    String InPortInName = "in";
+    x.forEach( ( Object o ) -> {
+      log. log ( Level.INFO, "" );
+    });
+    for ( int i = 0; i < x.size(); i++ )
+      {
+        if ( messageOnPort( x, InPortInName, i ) )
+        {
+          entity ent = x.getValOnPort( InPortInName, i );
+          write ( "%s;received;%s;%s\n", time, df. format ( current ), TextUtils. toString ( ent ) );
+          ent.removeSelf(x);
+        }
+      }
+    /*
+    HashMap < String, Object > map = receive ( x );
+    over ( map. get ( "in" ) ). each ( ( Object v ) -> {
+      current = Calendar. getInstance (). getTime ();
+      write ( "%s;received;%s;%s\n", time, df. format ( current ), TextUtils. toString ( v ) );
+    } );
+    */
   }
 
   

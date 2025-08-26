@@ -28,10 +28,12 @@ public class TextUtils {
   
   public static String toString ( Object [] l ) {
 	  StringBuilder sb = new StringBuilder ();
+    sb. append ( "[" );
 	  int i = 0; for ( Object li : l ) {
 	    sb. append ( String. format ( "%s%s", toString ( li ), i < l. length - 1 ? ";" : "" ) );
 	    i ++;
 	  }
+    sb. append ( "]" );
 	  String s = sb. toString ();
 	  sb. setLength ( 0 );
 	  return s;
@@ -39,10 +41,12 @@ public class TextUtils {
   
   public static String toString ( List l ) {
 	  StringBuilder sb = new StringBuilder ();
+    sb. append ( "[" );
 	  int i = 0; for ( Object li : l ) {
 	    sb. append ( String. format ( "%s%s", li, i < l. size () -1 ? ";" : "" ) );
 	    i ++;
 	  }
+    sb. append ( "]" );
 	  String s = sb. toString ();
 	  sb. setLength ( 0 );
 	  return s;
@@ -50,10 +54,12 @@ public class TextUtils {
   
   public static String toString ( Map l ) {
 	  StringBuilder sb = new StringBuilder ();
+    sb. append ( "[" );
 	  int i = 0; for ( Object li : l. keySet () ) {
-	    sb. append ( String. format ( "'%s':'%s'%s", li, toString(l.get(li)), i < l. size () -1 ? ";" : "" ) );
+	    sb. append ( String. format ( "'%s':%s%s", li, toString(l.get(li)), i < l. size () -1 ? ";" : "" ) );
 	    i ++;
 	  }
+    sb. append ( "]" );
 	  String s = sb. toString ();
 	  sb. setLength ( 0 );
 	  return s;

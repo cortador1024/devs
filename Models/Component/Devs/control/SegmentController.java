@@ -21,8 +21,10 @@ public class SegmentController extends DefaultViewableAtomic 	{
 
   private final String IN = "state";
   private final String REQUEST = "request";
+  
   private final String OUT = "ostate";
   private final String RESPONSE = "response";
+  
   private final String LOG = "log";
   
   private int index = 0;
@@ -75,7 +77,7 @@ public class SegmentController extends DefaultViewableAtomic 	{
   
   
   public SegmentController ( String name, int i ) {
-		super ( name );
+		super ( String. format ( "SegmentController %s", name ) );
 		addInport ( IN );
 		addInport ( REQUEST );
 		addOutport ( OUT );
@@ -182,7 +184,7 @@ public class SegmentController extends DefaultViewableAtomic 	{
     HashMap < String, Object > msg = receive ( x );
     over ( msg. get ( IN ) ).each ( ( Object o ) -> { 
       onInput ( ( Object [] ) o );
-      holdIn ( STREAM, index );
+      holdIn ( STREAM, 0 );
     } );
     over ( msg. get ( REQUEST ) ).each ( ( Object o ) -> {
       onRequest ( ( String ) o );
@@ -198,7 +200,8 @@ public class SegmentController extends DefaultViewableAtomic 	{
   @Override
   public message out() {
     if ( phaseIs ( STREAM ) ) {
-      return send (OUT, new Object [] { xl0, xl2, index }, 
+      return send ( 
+        OUT, new Object [] { xl0, xl2, index }, 
         LOG, new LogStruct ( tag (), getPhase (), "active", new Object [] { xl0, xl2, index } ) 
       );
     }
