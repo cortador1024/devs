@@ -139,16 +139,14 @@ computeInputOutput(d.doubleValue());
 }
 
 public  void computeInputOutput(double t){
-      if(equalTN(t)) {
-          
-        output = myModel.Out();
-        outputForTimeView = myModel.Out();
-      }
-      else{
-        output = new message();//bpz
-      }
-
-      computeInputOutputHook1();
+  if(equalTN(t)) {
+    output = myModel.Out();
+    outputForTimeView = myModel.Out();
+  }
+  else{
+    output = new message();//bpz
+  }
+  computeInputOutputHook1();
 }
 
 public void  simulate(int numIter)

@@ -63,7 +63,7 @@ public class SimulatorController extends ViewableDigraph{
     public void layoutForSimView()
     {
         preferredSize = new Dimension(981, 650);
-        ((ViewableComponent)withName("GeneratorController g0")).setPreferredLocation(new Point(42, 34));
+        ((ViewableComponent)withName("GeneratorController g0")).setPreferredLocation(new Point(42, 33));
         ((ViewableComponent)withName("TransformatorController t1")).setPreferredLocation(new Point(420, 34));
         ((ViewableComponent)withName("TransformatorController t3")).setPreferredLocation(new Point(421, 438));
         ((ViewableComponent)withName("TransformatorController t2")).setPreferredLocation(new Point(420, 238));

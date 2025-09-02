@@ -6,6 +6,7 @@ package Component.Devs.lib.port;
 
 import Component.Devs.lib.TextUtils;
 import GenCol.entity;
+import java.util.Objects;
 
 /**
  *
@@ -21,6 +22,11 @@ public class InfoStruct extends entity {
   
   public Object get () {
     return value;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects. hash ( value );
   }
   
   @Override

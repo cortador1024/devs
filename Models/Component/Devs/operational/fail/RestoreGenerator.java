@@ -26,10 +26,16 @@ public class RestoreGenerator extends DefaultViewableAtomic{
   
   private final static String STATE = "state";
   
-  public RestoreGenerator ( String n ) {
+  private int min;
+  
+  private int max;
+  
+  public RestoreGenerator ( String n, int m0, int m1 ) {
     super ( String. format ( "RestoreGenerator %s", n ) );
     addInport ( STATE );
     addOutport ( RESPONSE );
+    min = m0;
+    max = m1;
   }
   
   @Override
@@ -42,11 +48,11 @@ public class RestoreGenerator extends DefaultViewableAtomic{
     super. deltext ( e, x );
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    over ( map. get ( STATE ) ).each ( ( Object o ) -> {
+    over ( map. get ( STATE ) ). each ( ( Object o ) -> {
       Content in = ( Content ) o;
       switch ( in. state ) {
         case "fail": {
-          holdIn ( "working", 30 ) ;
+          holdIn ( "working", Math. floor ( Math. random () * ( max - min ) ) ) ;
         } break;
       }
     } );

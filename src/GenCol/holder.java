@@ -80,6 +80,7 @@ public class holder<T>
         try
         {
             Object out = method.invoke(obj, args);
+            System. getLogger ( "" ). log ( java.lang.System.Logger.Level.INFO, String. format ( "method = %s, object = %s, out = %s", method.getName(), obj, out ) );
             if (result != null && out != null)
             {
                 result.add((T) out);

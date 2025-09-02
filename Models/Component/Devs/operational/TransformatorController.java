@@ -36,16 +36,16 @@ public class TransformatorController extends ViewableDigraph{
     
     add ( e0 = new ElectricTransformator ( n + "/t0", t0, t1 ) );
     add ( f0 = new FailureGenerator ( n + "/f0" ) );
-    add ( r0 = new RestoreGenerator ( n + "/r0" ) );
+    add ( r0 = new RestoreGenerator ( n + "/r0", 3, 120 ) );
     
     addCoupling ( this, "tension", e0, "tension" );
     addCoupling ( e0, "otension", this, "otension" );
     
     addCoupling ( e0, "log", this, "log" );
     
-   //addCoupling ( f0, "response", e0, "state" );
+    addCoupling ( f0, "response", e0, "state" );
     addCoupling ( f0, "response", r0, "state" );
-  //  addCoupling ( r0, "response", e0, "state" );
+    addCoupling ( r0, "response", e0, "state" );
     addCoupling ( r0, "response", f0, "state" );
     
   }

@@ -6,7 +6,6 @@ package Component.Devs.registrator;
 
 import Component.Devs.lib.DefaultViewableAtomic;
 import Component.Devs.lib.TextUtils;
-import GenCol.entity;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -19,6 +18,7 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import model.modeling.message;
 
 /**
@@ -72,26 +72,12 @@ public class RegistratorController extends DefaultViewableAtomic {
     Continue ( e );
     time += e;
     current = Calendar. getInstance (). getTime ();
-    String InPortInName = "in";
-    x.forEach( ( Object o ) -> {
-      log. log ( Level.INFO, "" );
-    });
-    for ( int i = 0; i < x.size(); i++ )
-      {
-        if ( messageOnPort( x, InPortInName, i ) )
-        {
-          entity ent = x.getValOnPort( InPortInName, i );
-          write ( "%s;received;%s;%s\n", time, df. format ( current ), TextUtils. toString ( ent ) );
-          ent.removeSelf(x);
-        }
-      }
-    /*
     HashMap < String, Object > map = receive ( x );
     over ( map. get ( "in" ) ). each ( ( Object v ) -> {
       current = Calendar. getInstance (). getTime ();
       write ( "%s;received;%s;%s\n", time, df. format ( current ), TextUtils. toString ( v ) );
     } );
-    */
+   
   }
 
   

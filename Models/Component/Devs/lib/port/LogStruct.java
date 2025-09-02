@@ -5,6 +5,7 @@
 package Component.Devs.lib.port;
 
 import Component.Devs.lib.TextUtils;
+import java.util.Objects;
 
 /**
  *
@@ -19,6 +20,12 @@ public class LogStruct {
   public LogStruct ( String s, Object ... v ) {
     source = s;
     values = v;
+  }
+  
+   
+  @Override
+  public int hashCode() {
+    return Objects. hash ( source, values );
   }
   
   @Override

@@ -4,6 +4,8 @@
  */
 package Component.Devs.lib.port;
 
+import java.util.Objects;
+
 /**
  *
  * @author sysadmin
@@ -17,6 +19,12 @@ public class Content {
   public Content ( String s, double v ) {
     state = s;
     value = v;
+  }
+  
+   
+  @Override
+  public int hashCode() {
+    return Objects. hash ( state, value );
   }
   
   @Override

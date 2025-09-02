@@ -9,7 +9,7 @@ import model.modeling.message;
 
 public class FailureGenerator extends DefaultViewableAtomic {
   
-  private static final double ALPHA = 10.047;
+  private static final double ALPHA = 47.047;
   
   private static final double BETA = 1.180;
   
@@ -27,7 +27,7 @@ public class FailureGenerator extends DefaultViewableAtomic {
   
   @Override
   public void initialize() {
-    holdIn ( "working", 30 );
+    holdIn ( "working", weibull. inverse ( Math. random () ) );
   }
   
   @Override
@@ -35,11 +35,11 @@ public class FailureGenerator extends DefaultViewableAtomic {
     super. deltext ( e, x );
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
-    over ( map. get ( STATE ) ).each ( ( Object o ) -> {
+    over ( map. get ( STATE ) ). each ( ( Object o ) -> {
       Content in = ( Content ) o;
       switch ( in. state ) {
         case "restore": {
-          holdIn ( "working", 30 );
+          holdIn ( "working", weibull. inverse ( Math. random () )  );
         } break;
       }
     } );

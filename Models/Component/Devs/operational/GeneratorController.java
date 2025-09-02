@@ -35,7 +35,7 @@ public class GeneratorController extends ViewableDigraph{
     
     add ( e0 = new ElectricGenerator ( n + "/g0", 33d ) );
     add ( f0 = new FailureGenerator ( n + "/f0" ) );
-    add ( r0 = new RestoreGenerator ( n + "/r0" ) );
+    add ( r0 = new RestoreGenerator ( n + "/r0", 3, 120 ) );
     
     addCoupling ( e0, "otension", this, "otension" );
     addCoupling ( e0, "log", this, "log" );

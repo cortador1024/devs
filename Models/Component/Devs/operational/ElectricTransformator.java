@@ -58,7 +58,7 @@ public class ElectricTransformator extends DefaultViewableAtomic {
       }
       holdIn ( "change", 1 );
     } ); 
-    over ( map. get ( "tension" ) ).each ( ( Object v ) -> { 
+    over ( map. get ( "tension" ) ). each ( ( Object v ) -> { 
       tension = ( double ) v;
       holdIn ( "send", 1 );
     } );
