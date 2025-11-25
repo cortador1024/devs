@@ -5,7 +5,7 @@
  */
 package main;
 
-import Component.Devs.CoupledController;
+import Component.Devs.GeneralCoupled;
 import controller.SimLauncher;
 import model.simulation.coordinator;
 
@@ -22,7 +22,7 @@ public class Main {
     try {
       
       if ( args. length > 0 ) {
-        coordinator c = new coordinator ( new CoupledController () );
+        coordinator c = new coordinator ( new GeneralCoupled () );
         c. initialize ();
         c. simulate ( Integer. valueOf ( args [ 0 ] ) );
         return;

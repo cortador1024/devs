@@ -1,23 +1,23 @@
 package Component.Devs.control;
 
-import static Component.Devs.control.SegmentController.SegmentAction.QUERY;
-import static Component.Devs.control.SegmentController.SegmentAction.RESET;
-import static Component.Devs.control.SegmentController.SegmentPhase.ACTION;
-import static Component.Devs.control.SegmentController.SegmentPhase.STREAM;
-import static Component.Devs.control.SegmentController.SegmentPhase.WAIT;
-import Component.Devs.control.SensorController.SensorState;
-import static Component.Devs.control.SensorController.SensorState.ERROR;
-import static Component.Devs.control.SensorController.SensorState.HIGH_TENSION;
-import static Component.Devs.control.SensorController.SensorState.INTERRUPTION;
-import static Component.Devs.control.SensorController.SensorState.LOW_TENSION;
-import static Component.Devs.control.SensorController.SensorState.NORMAL;
+import static Component.Devs.control.SegmentAtomic.SegmentAction.QUERY;
+import static Component.Devs.control.SegmentAtomic.SegmentAction.RESET;
+import static Component.Devs.control.SegmentAtomic.SegmentPhase.ACTION;
+import static Component.Devs.control.SegmentAtomic.SegmentPhase.STREAM;
+import static Component.Devs.control.SegmentAtomic.SegmentPhase.WAIT;
+import Component.Devs.control.SensorAtomic.SensorState;
+import static Component.Devs.control.SensorAtomic.SensorState.ERROR;
+import static Component.Devs.control.SensorAtomic.SensorState.HIGH_TENSION;
+import static Component.Devs.control.SensorAtomic.SensorState.INTERRUPTION;
+import static Component.Devs.control.SensorAtomic.SensorState.LOW_TENSION;
+import static Component.Devs.control.SensorAtomic.SensorState.NORMAL;
 import Component.Devs.lib.DefaultViewableAtomic;
 import Component.Devs.lib.port.LogStruct;
 import java.util.HashMap;
 
 import model.modeling.message;
 
-public class SegmentController extends DefaultViewableAtomic 	{
+public class SegmentAtomic extends DefaultViewableAtomic 	{
 
   private final String IN = "state";
   private final String REQUEST = "request";
@@ -66,7 +66,7 @@ public class SegmentController extends DefaultViewableAtomic 	{
   }
   // xl0 represent the current state of the segment component
   private SensorState xl0 = NORMAL;
-  // xl1 represent the previous state of the segment component
+  // xl0 represent the last non error state of the segment component
   private SensorState xl1 = NORMAL;
   // xl2 represent the current measurement of the segment component
   private double xl2 = 0;
@@ -76,7 +76,7 @@ public class SegmentController extends DefaultViewableAtomic 	{
   private int xl5 = 0;
   
   
-  public SegmentController ( String name, int i ) {
+  public SegmentAtomic ( String name, int i ) {
 		super ( String. format ( "SegmentController %s", name ) );
 		addInport ( IN );
 		addInport ( REQUEST );
@@ -84,11 +84,12 @@ public class SegmentController extends DefaultViewableAtomic 	{
     addOutport ( RESPONSE );
 		addOutport ( LOG );
     index = i;
+    holdIn ( WAIT, INFINITY );
 	}
 	
 	@Override
   public void initialize() {
-	  holdIn ( WAIT, INFINITY );
+	  
   }
   
   @Override
@@ -153,30 +154,24 @@ public class SegmentController extends DefaultViewableAtomic 	{
   private void onInput ( Object [] xe ) {
     SensorState xe0 = ( SensorState ) xe [ 0 ];
     double xe1 = ( double) xe [ 1 ];
-    xl0 = xf ( xe0, xl0 );
-    xl1 = xe0;
-    xl2 = xe1;
-    if ( xl1 == xe0 && xl5 == 3 ) {
+    SensorState next = xf ( xe0, xl0 );
+    if ( next == ERROR && xl1 == xe0 && xl5 == 3 ) {
       xl0 = NORMAL;
       xl1 = NORMAL;
-      // xl2 = 0;
       xl3 = RESET;
       xl5 = 0;
+      return;
     } else
-    if ( xl1 == xe0 && xl5 < 4 ) {
+    if ( next == ERROR && xl1 == xe0 && xl5 < 4 ) {
+      xl0 = next;
+      xl2 = xe1;
       xl3 = null;
       xl5 ++;
-    } else
-    if ( xl1 != xe0 ) {
-      xl3 = null;
-      xl5 = 0;
-    }
+      return;
+    }  
+    xl0 = next;
+    xl2 = xe1;
   }
-  
-  private void onRequest ( String request ) {
-    xl3 = SegmentAction. valueOf ( request );
-  }
-  
   
 	@Override
   public void deltext ( double e, message x ) {
@@ -187,7 +182,7 @@ public class SegmentController extends DefaultViewableAtomic 	{
       holdIn ( STREAM, 0 );
     } );
     over ( msg. get ( REQUEST ) ).each ( ( Object o ) -> {
-      onRequest ( ( String ) o );
+      xl3 = SegmentAction. valueOf ( ( String ) o );
       holdIn ( ACTION, 0 );
     } );
   }

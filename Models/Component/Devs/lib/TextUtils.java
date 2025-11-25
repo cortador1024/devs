@@ -4,6 +4,8 @@
  */
 package Component.Devs.lib;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +14,23 @@ import java.util.Map;
  * @author sysadmin
  */
 public class TextUtils {
+  
+  private final static DecimalFormat snf = decimalFormat ( ',', 2 );
+  
+  static public DecimalFormat decimalFormat ( char decimalSymbol, int decimalCount ) {
+    DecimalFormat df = ( DecimalFormat ) DecimalFormat. getInstance ();
+    DecimalFormatSymbols sf = DecimalFormatSymbols. getInstance ();
+    sf. setDecimalSeparator ( decimalSymbol );
+    df. setDecimalFormatSymbols ( sf );
+    df. setGroupingUsed ( false );
+    df. setMaximumFractionDigits ( decimalCount );
+    df. setMinimumFractionDigits ( decimalCount );
+    return df;
+  }
+  
+  static {
+    
+  }
   
   public static String toString ( Object o ) {
     if ( o instanceof Object [] ) {
@@ -30,6 +49,9 @@ public class TextUtils {
 	  StringBuilder sb = new StringBuilder ();
     sb. append ( "[" );
 	  int i = 0; for ( Object li : l ) {
+      if ( li instanceof Number ) {
+        li = snf. format ( li );
+      }
 	    sb. append ( String. format ( "%s%s", toString ( li ), i < l. length - 1 ? ";" : "" ) );
 	    i ++;
 	  }

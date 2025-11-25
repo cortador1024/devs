@@ -1,23 +1,25 @@
 package Component.Devs.operational.fail;
 
 import Component.Devs.lib.DefaultViewableAtomic;
-import Component.Devs.lib.port.Content;
+import Component.Devs.lib.ElectricEvent;
+import Component.Devs.operational.GeneratorCoupled;
+import Component.Devs.operational.TransformatorCoupled;
+import Component.Devs.operational.probability.distribution.Uniform;
 import Component.Devs.operational.probability.distribution.Weibull;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Objects;
+import model.modeling.IODevs;
 
 import model.modeling.message;
 
 public class FailureGenerator extends DefaultViewableAtomic {
   
-  private static final double ALPHA = 47.047;
-  
-  private static final double BETA = 1.180;
-  
-  private final Weibull weibull = new Weibull ( ALPHA, BETA, true );
-  
   private final static String RESPONSE = "response";
   
   private final static String STATE = "state";
+  
+  private ElectricEvent event;
   
   public FailureGenerator ( String n ) {
     super ( String. format ( "FailureGenerator %s", n ) );
@@ -26,8 +28,9 @@ public class FailureGenerator extends DefaultViewableAtomic {
   }
   
   @Override
-  public void initialize() {
-    holdIn ( "working", weibull. inverse ( Math. random () ) );
+  public void init () {
+    event = event ();
+    holdIn ( "wait", event. start );
   }
   
   @Override
@@ -36,12 +39,12 @@ public class FailureGenerator extends DefaultViewableAtomic {
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
     over ( map. get ( STATE ) ). each ( ( Object o ) -> {
-      Content in = ( Content ) o;
-      switch ( in. state ) {
-        case "restore": {
-          holdIn ( "working", weibull. inverse ( Math. random () )  );
-        } break;
+      ElectricEvent in = ( ElectricEvent ) o;
+      if ( ! Objects. equals ( in, event ) ) {
+        return;
       }
+      event = event ();
+      holdIn ( "work", event. start );
     } );
   }
   
@@ -52,7 +55,7 @@ public class FailureGenerator extends DefaultViewableAtomic {
   
   @Override
   public message out () {
-    return send ( RESPONSE, new Content ( "fail", 0 ) );
+    return send ( RESPONSE, event );
   }
   
   @Override

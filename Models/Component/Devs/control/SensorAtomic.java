@@ -1,11 +1,11 @@
 package Component.Devs.control;
 
-import static Component.Devs.control.SensorController.SensorPhase.STREAM;
-import static Component.Devs.control.SensorController.SensorPhase.WAIT;
-import static Component.Devs.control.SensorController.SensorState.HIGH_TENSION;
-import static Component.Devs.control.SensorController.SensorState.INTERRUPTION;
-import static Component.Devs.control.SensorController.SensorState.LOW_TENSION;
-import static Component.Devs.control.SensorController.SensorState.NORMAL;
+import static Component.Devs.control.SensorAtomic.SensorPhase.STREAM;
+import static Component.Devs.control.SensorAtomic.SensorPhase.WAIT;
+import static Component.Devs.control.SensorAtomic.SensorState.HIGH_TENSION;
+import static Component.Devs.control.SensorAtomic.SensorState.INTERRUPTION;
+import static Component.Devs.control.SensorAtomic.SensorState.LOW_TENSION;
+import static Component.Devs.control.SensorAtomic.SensorState.NORMAL;
 import Component.Devs.lib.DefaultViewableAtomic;
 import Component.Devs.lib.TextUtils;
 import Component.Devs.lib.port.LogStruct;
@@ -15,15 +15,8 @@ import java.util.HashMap;
 
 import model.modeling.message;
 
-public class SensorController extends DefaultViewableAtomic	{
+public class SensorAtomic extends DefaultViewableAtomic	{
 
-  private static final double ALPHA = 0.547;
-  
-  private static final double BETA = 1.180;
-  
-  private final Weibull weibull = new Weibull ( ALPHA, BETA, true );
-  
-  
   private final String IN = "tension";
   
   private final String OUT = "ostate";
@@ -87,18 +80,18 @@ public class SensorController extends DefaultViewableAtomic	{
   
   private double zl1 = 0;
 
-	public SensorController ( String name, double nt ) {
+	public SensorAtomic ( String name, double nt ) {
 		super ( String. format ( "SensorController %s (%s)", name, nt ) );
 		NOMINAL_TENSION = nt;
 		addInport ( IN );
 		addOutport ( OUT );
     addOutport ( LOG );
+    holdIn ( WAIT, INFINITY );
 	}
 
 	@Override
   public void initialize () {
-	  // holdIn ( WAIT, 14 + Math. random () * 10 );
-    holdIn ( WAIT, INFINITY );
+    
   }
 	
   @Override
@@ -118,22 +111,20 @@ public class SensorController extends DefaultViewableAtomic	{
       return;
     } 
     zl0. remove ( 0 );
-    holdIn ( STREAM, 1 /* weibull. inverse ( Math. random () ) */ );
+    holdIn ( STREAM, 0 );
 	}
 	
 	@Override
 	public void deltint () {
-    if ( phaseIs ( STREAM ) ) {
-      zl0. clear ();  
-    }
     holdIn ( WAIT, INFINITY );
 	}
 	
 	@Override
 	public message out () {
 	  zl1 = zg ( zl0 );
+    String zs = zf ( zl1, NOMINAL_TENSION ). name;
     return send ( OUT, new Object [] { zf ( zl1, NOMINAL_TENSION ), zl1 }, 
-      LOG, new LogStruct ( tag (), getPhase (), "active", new Object [] { copy ( zl0 ), zl1 } ) 
+      LOG, new LogStruct ( tag (), getPhase (), new Object [] { zs, copy ( zl0 ), zl1 } ) 
     );
 	}
   

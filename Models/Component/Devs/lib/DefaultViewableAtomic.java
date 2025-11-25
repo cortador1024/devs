@@ -5,11 +5,15 @@
 package Component.Devs.lib;
 
 import Component.Devs.lib.port.InfoStruct;
+import Component.Devs.operational.GeneratorCoupled;
+import Component.Devs.operational.TransformatorCoupled;
 import GenCol.entity;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
+import model.modeling.IODevs;
 import model.modeling.message;
 import view.modeling.ViewableAtomic;
 import view.modeling.ViewableDigraph;
@@ -20,9 +24,57 @@ import view.modeling.ViewableDigraph;
  */
 public class DefaultViewableAtomic extends ViewableAtomic {
  
+  private int state = 0;
+  
   public DefaultViewableAtomic ( String name ) {
     super ( name );
   }
+  
+  @Override
+  public void initialize () {
+    if ( state == 1 ) {
+      return;
+    }
+    state = 1;
+    init ();
+  }
+  
+  private Method method ( Object o, String name, Class ... c ) {
+    if ( o == null ) {
+      return null;
+    }
+    Method r = null;
+    Class parent = o. getClass ();
+    boolean finish = false;
+    while ( parent != null ) {
+      try {
+        r = parent. getDeclaredMethod ( name );
+      } catch ( Exception ex ) {
+
+      }
+      if ( r == null ) {
+        parent = parent. getSuperclass ();
+        continue;
+      }
+      break;
+    }
+    return r;
+  }
+  
+  public ElectricEvent event () {
+    ElectricEvent e = null;
+    try {
+      Method method = method ( getMyParent (), "event" );
+      if ( method == null ) {
+        throw new Exception ();
+      }
+      e = ( ElectricEvent ) method. invoke ( getParent () );
+    } catch ( Exception ex ) {
+      int a = 0;
+    }
+    return e == null ? new ElectricEvent () : e;
+  }
+  
   
   public String tag () {
     String n = super. getName ();
@@ -58,6 +110,10 @@ public class DefaultViewableAtomic extends ViewableAtomic {
       r. put ( n, v );
     }
     return r;
+  }
+
+  protected void init() {
+
   }
   
   public class IterationBlock {

@@ -1,45 +1,32 @@
 package Component.Devs.operational;
 
 import Component.Devs.lib.DefaultViewableAtomic;
-import Component.Devs.lib.port.Content;
+import Component.Devs.lib.ElectricEvent;
 import Component.Devs.lib.port.LogStruct;
-import Component.Devs.operational.probability.distribution.Weibull;
 import java.util.HashMap;
 
 import model.modeling.message;
 
 public class ElectricGenerator extends DefaultViewableAtomic {
   
-  static private final Object [] EMPTY_ARRAY = new Object [ 0 ];
-  
-  private String state = ""; // cause = { ok, fail }
+  private double tension;
+
+  private double nominal;
   
   private double level = 1;
   
-  private double tension;
-
-  private double nominalTension;
-  
-  private Weibull weibull = new Weibull ( 21d, 3d, true );
-  
-  private double value;
-  
   public ElectricGenerator ( String n, double t ) {
-    super ( String. format ( "ElectricGenerator %s(%s)", n, t ) );
+    super ( String. format ( "ElectricGenerator %s", n, t ) );
     addOutport ( "otension" );
     addOutport ( "log" );
     addInport ( "tension" );
     addInport ( "state" );
     tension = t;
-    nominalTension = t;
+    nominal = t;
+    holdIn ( "send", 1 ); 
   } 
   
-  @Override
-  public void initialize() {
-    holdIn ( "send", 1 ); 
-  }
-  
-  private double f ( double e ) {
+  private double f () {
     return tension * level;
   }
   
@@ -49,22 +36,13 @@ public class ElectricGenerator extends DefaultViewableAtomic {
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
     over ( map. get ( "state" ) ). each ( ( Object v ) -> {
-      Content in = ( Content ) v;
-      level = ( double ) in. value;
-      tension = nominalTension * level;
-      switch ( in. state ) {
-        case "fail": {
-          state = "failure";
-        } break;
-        case "restore": {
-          state = "working";
-        } break;
-      }
-      holdIn ( "change", 1 );
+      ElectricEvent event = ( ElectricEvent ) v;
+      level = event. level;
+      holdIn ( "change", 0 );
     } );
     over ( map. get ( "tension" ) ). each ( ( Object v ) -> {
       tension = ( double ) v;
-      holdIn ( "send", 1 );
+      holdIn ( "send", 0 );
     } );
   }
   
@@ -77,10 +55,10 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   public message out () {
     switch ( getPhase () ) {
       case "send" : { 
-        return send ( "otension", value = f ( getSigma () ) );
+        return send ( "otension", f () );
       } 
       case "change": {
-        return send ( "log", new LogStruct ( tag (), getPhase (), state, String. format ( "tension:%s", value ) ) ); 
+        return send ( "log", new LogStruct ( tag (), getPhase (), f (), nominal, level ) ); 
       }
     }
     return send ();
@@ -89,6 +67,10 @@ public class ElectricGenerator extends DefaultViewableAtomic {
   @Override
   public double ta () {
     return getSigma ();
+  }
+
+  double generation () {
+    return nominal;
   }
 
 }

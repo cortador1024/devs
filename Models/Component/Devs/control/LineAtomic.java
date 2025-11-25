@@ -1,8 +1,8 @@
 package Component.Devs.control;
 
-import static Component.Devs.control.LineController.LinePhase.STREAM;
-import static Component.Devs.control.LineController.LinePhase.WAIT;
-import Component.Devs.control.SensorController.SensorState;
+import static Component.Devs.control.LineAtomic.LinePhase.STREAM;
+import static Component.Devs.control.LineAtomic.LinePhase.WAIT;
+import Component.Devs.control.SensorAtomic.SensorState;
 import Component.Devs.lib.DefaultViewableAtomic;
 import Component.Devs.lib.port.LogStruct;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import model.modeling.message;
 
-public class LineController extends DefaultViewableAtomic {
+public class LineAtomic extends DefaultViewableAtomic {
 
   
   public enum LinePhase {
@@ -43,19 +43,17 @@ public class LineController extends DefaultViewableAtomic {
   
   private static final String LOG = "log";
   
-	public LineController ( String name ) {
+	public LineAtomic ( String name ) {
 		super ( String. format ( "LineController %s", name ) );
 		addInport ( IN );
 		addOutport ( OUT );
     addOutport ( "log" );
 	}
-	
-	@Override
-  public void initialize() {
-	  
-	  holdIn ( WAIT, INFINITY );
-	  clear ( yl0 );
+  
+  protected void init () {
+    clear ( yl0 );
     clear ( array );
+    holdIn ( WAIT, INFINITY );
   }
 	
 	@Override
@@ -136,7 +134,7 @@ public class LineController extends DefaultViewableAtomic {
     for ( int i = 1, top = array. length; i < top; i ++ ) {
       yl0 [ i ] = yf ( ( Object [] ) array [ 0 ], ( Object [] ) array [ i ] );
     }
-    holdIn ( STREAM, 1 );
+    holdIn ( STREAM, 0 );
   }
   
   @Override

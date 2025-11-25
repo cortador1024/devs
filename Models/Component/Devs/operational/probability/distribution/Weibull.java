@@ -54,7 +54,7 @@ public class Weibull {
   
   public double inverse ( double probability ) {
     double r = accumulate ?
-      alpha * Math. pow ( - Math.log ( 1 - probability ), 1 / beta ) :
+      alpha * Math. pow ( - Math. log ( 1 - probability ), 1 / beta ) :
       alpha * Math. pow ( - Math. log ( probability ), 1 / beta )
     ;
     return r;

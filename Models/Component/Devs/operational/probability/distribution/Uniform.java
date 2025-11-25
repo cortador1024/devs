@@ -43,18 +43,11 @@ public class Uniform {
   }
   
   public double direct ( double x ) {
-    double r = accumulate ? 
-      1 - Math. exp ( Math. pow ( x / alpha, beta ) ) :
-      Math. exp ( Math. pow ( x / alpha, beta ) );
-    return r;
+    return ( x - alpha ) / ( beta - alpha );
   }
   
   public double inverse ( double probability ) {
-    double r = accumulate ?
-      alpha * Math. pow ( - Math.log ( 1 - probability ), 1 / beta ) :
-      alpha * Math. pow ( - Math. log ( probability ), 1 / beta )
-    ;
-    return r;
+    return ( beta - alpha ) * probability + alpha;
   }
-  
+
 }

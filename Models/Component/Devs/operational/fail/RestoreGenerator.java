@@ -5,9 +5,13 @@
 package Component.Devs.operational.fail;
 
 import Component.Devs.lib.DefaultViewableAtomic;
+import Component.Devs.lib.ElectricEvent;
 import Component.Devs.lib.port.Content;
-import Component.Devs.operational.probability.distribution.Weibull;
+import Component.Devs.operational.GeneratorCoupled;
+import Component.Devs.operational.TransformatorCoupled;
+import Component.Devs.operational.probability.distribution.Uniform;
 import java.util.HashMap;
+import model.modeling.IODevs;
 import model.modeling.message;
 
 /**
@@ -16,30 +20,22 @@ import model.modeling.message;
  */
 public class RestoreGenerator extends DefaultViewableAtomic{
 
-  private static final double ALPHA = 3.047;
-  
-  private static final double BETA = 1.180;
-  
-  private final Weibull weibull = new Weibull ( ALPHA, BETA, true );
+  private Uniform uniform;
   
   private final static String RESPONSE = "response";
   
   private final static String STATE = "state";
+
+  private ElectricEvent event;
   
-  private int min;
-  
-  private int max;
-  
-  public RestoreGenerator ( String n, int m0, int m1 ) {
+  public RestoreGenerator ( String n ) {
     super ( String. format ( "RestoreGenerator %s", n ) );
     addInport ( STATE );
     addOutport ( RESPONSE );
-    min = m0;
-    max = m1;
   }
   
   @Override
-  public void initialize() {
+  protected void init () {
     holdIn ( "wait", INFINITY );
   }
   
@@ -49,28 +45,26 @@ public class RestoreGenerator extends DefaultViewableAtomic{
     Continue ( e );
     HashMap < String, Object > map = receive ( x );
     over ( map. get ( STATE ) ). each ( ( Object o ) -> {
-      Content in = ( Content ) o;
-      switch ( in. state ) {
-        case "fail": {
-          holdIn ( "working", Math. floor ( Math. random () * ( max - min ) ) ) ;
-        } break;
-      }
+      event = ( ElectricEvent ) o;
+      holdIn ( "work", event. duration ) ;
     } );
   }
-  
+
   @Override
   public void deltint () {
-    holdIn ( "wait", INFINITY );
+    holdIn ( "wait", INFINITY ); 
   }
   
   @Override
   public message out () {
-    return send ( RESPONSE, new Content ( "restore", 1d ) );
+    event. level = 1;
+    return send ( RESPONSE, event );
   }
   
   @Override
   public double ta () {
     return getSigma ();
   }
+
 
 }
